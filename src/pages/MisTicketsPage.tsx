@@ -1,9 +1,11 @@
 import { Box, Button, Grid } from "@mui/material";
 import { useState } from "react";
 import TicketDialog from "../components/TicketDialog";
+import { useAuth } from "../context/AuthContext";
 
 const MisTicketsPage: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   const handleOpen = () => {
     setOpen(true);
@@ -71,7 +73,9 @@ const MisTicketsPage: React.FC = () => {
                 borderRadius: 3,
                 boxShadow: 2,
               }}
-            ></Box>
+            >
+              {user?.rol}
+            </Box>
           </Grid>
         </Grid>
       </Box>
