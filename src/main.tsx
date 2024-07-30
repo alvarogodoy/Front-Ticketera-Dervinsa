@@ -3,23 +3,17 @@ import ReactDOM from "react-dom/client";
 import { CssBaseline } from "@mui/material";
 import Layout from "./Layout/Layout.tsx";
 import AppRoutes from "./routes/AppRoutes.tsx";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { AuthProvider } from "./context/AuthContext.tsx";
 import { AuthConfig } from "./config/AuthConfig.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Auth0Provider
-      domain={AuthConfig.domain}
-      clientId={AuthConfig.clientId}
-      authorizationParams={{
-        redirect_uri: AuthConfig.redirectUri,
-      }}
-    >
-      <CssBaseline>
+    <CssBaseline>
+      <AuthProvider domain={AuthConfig.domain} clientId={AuthConfig.clientId}>
         <Layout>
           <AppRoutes />
         </Layout>
-      </CssBaseline>
-    </Auth0Provider>
+      </AuthProvider>
+    </CssBaseline>
   </React.StrictMode>
 );

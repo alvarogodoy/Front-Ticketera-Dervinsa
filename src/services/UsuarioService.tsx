@@ -15,7 +15,7 @@ export const getUsuarios = async () => {
 
 export const getUsuarioByEmail = async (email: string) => {
   try {
-    const response = await axios.get(`${API_URL}/${email}`);
+    const response = await axios.get(`${API_URL}/porEmail/${email}`);
     return response.data as Usuario;
   } catch (error) {
     console.error("Error obteniendo usuarios:", error);
