@@ -82,6 +82,7 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
             fetchedUser = new Usuario();
             fetchedUser.email = auth0User?.email;
             fetchedUser.urlPic = auth0User?.picture;
+            fetchedUser.area = undefined;
             await postUsuario(fetchedUser);
           }
 

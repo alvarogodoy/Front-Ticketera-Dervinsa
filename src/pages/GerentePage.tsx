@@ -16,7 +16,7 @@ const GerentePage: React.FC = () => {
   };
 
   const handleReqSubmit = (req: { description: string }) => {
-    console.log("Nuevo Requerimiento Creado:", req);
+    console.log(user?.area?.nombre);
   };
 
   return (
@@ -44,7 +44,7 @@ const GerentePage: React.FC = () => {
               alignItems: "center",
             }}
           >
-            Area
+            {user?.area?.nombre}
           </Box>
           <Box
             sx={{
