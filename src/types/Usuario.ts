@@ -7,7 +7,7 @@ class Usuario {
   email: string | undefined = "";
   urlPic: string | undefined = "";
   tickets: Array<Ticket> = new Array();
-  area: Area|undefined;
+  area: Area | undefined = new Area();
   rol: Rol = Rol.EMPLEADO;
 }
 
