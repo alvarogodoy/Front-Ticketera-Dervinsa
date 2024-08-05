@@ -14,7 +14,21 @@ export const getTickets = async () => {
 };
 
 export const postTicket = async (ticket: Ticket): Promise<void> => {
-  await axios.post(API_URL, ticket, {
+  console.log(ticket);
+
+  let ticketToSend = {
+    ...ticket,
+    requerimiento: {
+      id: ticket.requerimiento.id,
+    },
+    usuario: {
+      id: ticket.usuario.id,
+    },
+  };
+
+  console.log(ticketToSend);
+
+  await axios.post(API_URL, ticketToSend, {
     headers: {
       "Content-Type": "application/json",
     },

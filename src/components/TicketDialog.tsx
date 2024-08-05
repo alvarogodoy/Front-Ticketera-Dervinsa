@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -12,35 +12,72 @@ import {
   FormControl,
   Box,
 } from "@mui/material";
+import Ticket from "../types/Ticket";
+import Area from "../types/Area";
+import { getAreas } from "../services/AreaService";
+import Requerimiento from "../types/Requerimiento";
+import { getRequerimientos } from "../services/RequerimientoService";
+import { useAuth } from "../context/AuthContext";
+import { postTicket } from "../services/TicketService";
+import Prioridad from "../types/enums/Prioridad";
 
 interface TicketFormProps {
-  onSubmit: (ticket: Ticket) => void;
   onClose: () => void;
   open: boolean;
 }
 
-interface Ticket {
-  title: string;
-  description: string;
-  requirement: string;
-}
+const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
+  const [titulo, setTitulo] = useState<string>("");
+  const [descripcion, setDescripcion] = useState<string>("");
+  const [areas, setAreas] = useState<Area[]>([]);
+  const [area, setArea] = useState<string>("");
+  const [requerimientos, setRequerimientos] = useState<Requerimiento[]>([]);
+  const [requerimiento, setRequerimiento] = useState<string>("");
+  const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.BAJA);
+  const { user } = useAuth();
 
-const TicketDialog: React.FC<TicketFormProps> = ({
-  onSubmit,
-  onClose,
-  open,
-}) => {
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [requirement, setRequirement] = useState<string>("");
+  useEffect(() => {
+    const getAreasDB = async () => {
+      let areasDB = await getAreas();
+      setAreas(areasDB);
+    };
+
+    getAreasDB();
+  });
+
+  useEffect(() => {
+    const getReqsDB = async () => {
+      let reqsDB = await getRequerimientos();
+      reqsDB = reqsDB.filter((req) => req.area?.nombre === area);
+      console.log(reqsDB);
+
+      setRequerimientos(reqsDB);
+    };
+
+    getReqsDB();
+  }, [area]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newTicket: Ticket = { title, description, requirement };
-    onSubmit(newTicket);
-    setTitle("");
-    setDescription("");
-    setRequirement("");
+
+    let req = requerimientos.filter((r) => r.descripcion == requerimiento)[0];
+
+    const newTicket: Ticket = new Ticket();
+
+    if (user) {
+      newTicket.usuario = user;
+      newTicket.titulo = titulo;
+      newTicket.descripcion = descripcion;
+      newTicket.requerimiento = req;
+      newTicket.prioridad = prioridad;
+    }
+
+    postTicket(newTicket);
+
+    setTitulo("");
+    setDescripcion("");
+    setRequerimiento("");
+    setPrioridad(Prioridad.BAJA);
     onClose();
   };
 
@@ -62,8 +99,8 @@ const TicketDialog: React.FC<TicketFormProps> = ({
           <TextField
             label="Título"
             variant="outlined"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
             required
           />
           <TextField
@@ -71,24 +108,47 @@ const TicketDialog: React.FC<TicketFormProps> = ({
             variant="outlined"
             multiline
             rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
             required
           />
+          <FormControl variant="outlined" required>
+            <InputLabel id="area-label">Area</InputLabel>
+            <Select
+              labelId="area-label"
+              value={area}
+              onChange={(e) => setArea(e.target.value as string)}
+              label="Area"
+            >
+              {areas.map((a) => (
+                <MenuItem value={a.nombre}>{a.nombre}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl variant="outlined" required>
             <InputLabel id="requirement-label">Requerimiento</InputLabel>
             <Select
               labelId="requirement-label"
-              value={requirement}
-              onChange={(e) => setRequirement(e.target.value as string)}
+              value={requerimiento}
+              onChange={(e) => setRequerimiento(e.target.value as string)}
               label="Requerimiento"
             >
-              <MenuItem value="" disabled>
-                Seleccionar
-              </MenuItem>
-              <MenuItem value="bug">Bug</MenuItem>
-              <MenuItem value="feature">Feature</MenuItem>
-              <MenuItem value="support">Support</MenuItem>
+              {requerimientos.map((req) => (
+                <MenuItem value={req.descripcion}>{req.descripcion}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined" required>
+            <InputLabel id="requirement-label">Prioridad</InputLabel>
+            <Select
+              labelId="requirement-label"
+              value={prioridad}
+              onChange={(e) => setPrioridad(e.target.value as Prioridad)}
+              label="Requerimiento"
+            >
+              <MenuItem value={Prioridad.BAJA}>Baja</MenuItem>
+              <MenuItem value={Prioridad.MEDIA}>Media</MenuItem>
+              <MenuItem value={Prioridad.ALTA}>Alta</MenuItem>
             </Select>
           </FormControl>
         </Box>

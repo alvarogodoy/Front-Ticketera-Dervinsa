@@ -1,11 +1,24 @@
-import { Box, Button, Grid } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import RequerimientoDialog from "../components/RequerimientoDialog";
+import Ticket from "../types/Ticket";
+import { getTickets } from "../services/TicketService";
+import TicketGerente from "../components/TicketGerente";
 
 const GerentePage: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const getTicketsDB = async () => {
+      let ticketsDB = await getTickets();
+      setTickets(ticketsDB);
+    };
+
+    getTicketsDB();
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -13,10 +26,6 @@ const GerentePage: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleReqSubmit = (req: { description: string }) => {
-    console.log(user?.area?.nombre);
   };
 
   return (
@@ -75,36 +84,62 @@ const GerentePage: React.FC = () => {
             }}
           >
             <Button onClick={handleOpen}>Crear requerimiento</Button>
-            <RequerimientoDialog
-              open={open}
-              onClose={handleClose}
-              onSubmit={handleReqSubmit}
-            />
+            <RequerimientoDialog open={open} onClose={handleClose} />
           </Box>
         </Box>
         <Box
           sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             width: "100%",
             height: "100%",
             borderRadius: 3,
             border: "1px solid #aaa",
             mt: 2,
             padding: 1,
-            overflow: "auto",
           }}
         >
-          <Grid container spacing={3}>
+          <Grid container spacing={2} sx={{ height: "100%", width: "100%" }}>
             <Grid item xs={3}>
               <Box
                 sx={{
-                  bgcolor: "#fff",
-                  height: 200,
+                  border: "1px solid #888",
+                  height: "100%",
                   borderRadius: 3,
-                  boxShadow: 2,
                 }}
               >
-                {user?.rol}
+                <Box
+                  sx={{
+                    padding: 2,
+                    borderBottom: "1px solid #888",
+                    height: "10%",
+                  }}
+                >
+                  <Typography variant="h6">POR HACER</Typography>
+                </Box>
+                <Box
+                  sx={{
+                    padding: 2,
+                    height: "90%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  {tickets.map((ticket) => (
+                    <TicketGerente ticket={ticket}></TicketGerente>
+                  ))}
+                </Box>
               </Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={{}}></Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={{}}></Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box sx={{}}></Box>
             </Grid>
           </Grid>
         </Box>

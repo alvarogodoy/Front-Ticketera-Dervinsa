@@ -8,29 +8,29 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import Requerimiento from "../types/Requerimiento";
+import { useAuth } from "../context/AuthContext";
+import { postRequerimiento } from "../services/RequerimientoService";
 
 interface RequerimientoFormProps {
-  onSubmit: (requerimiento: Requerimiento) => void;
   onClose: () => void;
   open: boolean;
 }
 
-interface Requerimiento {
-  description: string;
-}
-
 const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
-  onSubmit,
   onClose,
   open,
 }) => {
-  const [description, setDescription] = useState<string>("");
+  const [descripcion, setDescripcion] = useState<string>("");
+  const { user } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newTicket: Requerimiento = { description };
-    onSubmit(newTicket);
-    setDescription("");
+    const newReq: Requerimiento = new Requerimiento();
+    newReq.descripcion = descripcion;
+    newReq.area = user?.area;
+    postRequerimiento(newReq);
+    setDescripcion("");
     onClose();
   };
 
@@ -54,8 +54,8 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
             variant="outlined"
             multiline
             rows={1}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
             required
           />
         </Box>

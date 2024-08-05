@@ -3,6 +3,7 @@ import Rol from "./enums/Rol";
 import Ticket from "./Ticket";
 
 class Usuario {
+  id : number = 0;
   eliminado: boolean = false;
   email: string | undefined = "";
   urlPic: string | undefined = "";

@@ -1,8 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import MisTicketsPage from "./MisTicketsPage";
 import { useAuth } from "../context/AuthContext";
 import Rol from "../types/enums/Rol";
 import GerentePage from "./GerentePage";
+import EmpleadoPage from "./EmpleadoPage";
+import AdminPage from "./AdminPage";
 
 const DashboardPage: React.FC = () => {
   const { isLoading } = useAuth0();
@@ -13,7 +14,15 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <>{user?.rol === Rol.EMPLEADO ? <MisTicketsPage /> : <GerentePage />}</>
+    <>
+      {user?.rol === Rol.EMPLEADO ? (
+        <EmpleadoPage />
+      ) : user?.rol === Rol.GERENTE ? (
+        <GerentePage />
+      ) : (
+        <AdminPage />
+      )}
+    </>
   );
 };
 
