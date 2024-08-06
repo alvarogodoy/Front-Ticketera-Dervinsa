@@ -1,39 +1,220 @@
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import { useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Box, Button } from "@mui/material";
-import React from "react";
 
-const Navbar: React.FC = () => {
+const settings = ["Mis Tickets", "Cerrar Sesión"];
+
+function Navbar() {
   const { isAuthenticated, user, logout } = useAuth0();
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   const handleLogout = () => {
     logout();
   };
 
-  return (
-    <Box
-      sx={{
-        backgroundColor: "#191919",
-        height: 80,
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        padding: 2,
-      }}
-    >
-      {isAuthenticated ? (
-        <>
-          <Button onClick={handleLogout}>Cerrar Sesion</Button>
-          <Avatar
-            sx={{ width: 45, height: 45 }}
-            variant="rounded"
-            src={user?.picture}
-          ></Avatar>
-        </>
-      ) : null}
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right', my: 2 }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            maxWidth: '250px',  // adjust the max width as necessary
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            marginLeft: 2
+          }}
+        >
+          {user?.name}
+        </Typography>
+        <Avatar
+          variant="rounded"
+          src={user?.picture}
+          sx={{ 
+            width: 35,
+            height: 35,
+            mr: 1,
+            marginLeft: 1
+          }}
+        />
+      </Box>
+      <List>
+        {settings.map((setting) => (
+          <ListItem button key={setting} onClick={setting === "Cerrar Sesión" ? handleLogout : handleCloseUserMenu}>
+            <ListItemText sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right'}} primary={setting} />
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
-};
+  
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", width: '100%', mr: 1}}>
+              <img
+                src="/img/logo2.png"
+                alt="logo"
+                style={{ height: "40px", width: "auto" }}
+              />
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ 
+                  flexGrow: 1,
+                  mr: 2,
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                  marginLeft: 3
+                }}
+              >
+                TICKETERA
+              </Typography>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="end"
+                onClick={handleDrawerToggle}
+                sx={{ display: { md: 'none' } }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
+            <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", mr: 1 }}>
+              <img
+                src="/img/logo2.png"
+                alt="logo"
+                style={{ height: "40px", width: "auto" }}
+              />
+            </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+                marginLeft: 2
+              }}
+            >
+              TICKETERA
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
+
+            {isAuthenticated ? (
+              <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+                
+                <Tooltip title="Abrir Opciones">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mr: 2,
+                        display: { xs: "none", md: "flex" },
+                        fontFamily: "monospace",
+                        fontWeight: 700,
+                        letterSpacing: ".1rem",
+                        color: "white",
+                        textDecoration: "none",
+                        marginLeft: 2
+                      }}
+                    >
+                      {user?.name}
+                    </Typography>
+                    <Avatar
+                      sx={{ width: 45, height: 45 }}
+                      variant="rounded"
+                      src={user?.picture}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting}
+                      onClick={setting === "Cerrar Sesión" ? handleLogout : handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            ) : null}
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <Box component="nav">
+        <Drawer
+          variant="temporary"
+          anchor="right" // Changed to 'right'
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 300 },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+    </Box>
+  );
+}
 
 export default Navbar;
