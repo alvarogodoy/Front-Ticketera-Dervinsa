@@ -1,15 +1,25 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Ticket from "../types/Ticket";
 import { useEffect, useState } from "react";
 import Prioridad from "../types/enums/Prioridad";
+import DetalleDialog from "./DetalleDialog";
 
 interface TicketGerenteProps {
   ticket: Ticket | null;
 }
 
 const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
+  const [open, setOpen] = useState(false);
   const [colorPrior, setColorPrior] = useState<string>("");
   const [tiempoDesde, setTiempoDesde] = useState<string>("");
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   function calculateTimeElapsed() {
     let startDate: Date = new Date();
@@ -86,7 +96,6 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "flex-end",
         }}
       >
         <Box
@@ -101,6 +110,12 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
         <Typography variant="subtitle1" color={"#555"}>
           <b>{ticket?.prioridad}</b>
         </Typography>
+        <Button variant="contained" onClick={handleOpen}>
+          Ver detalle
+        </Button>
+        {ticket ? (
+          <DetalleDialog open={open} onClose={handleClose} ticket={ticket} />
+        ) : null}
       </Box>
     </Box>
   );

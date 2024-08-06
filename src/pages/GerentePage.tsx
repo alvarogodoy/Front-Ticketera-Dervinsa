@@ -4,17 +4,37 @@ import { useAuth } from "../context/AuthContext";
 import RequerimientoDialog from "../components/RequerimientoDialog";
 import Ticket from "../types/Ticket";
 import { getTickets } from "../services/TicketService";
-import TicketGerente from "../components/TicketGerente";
+import ColumnaTickets from "../components/ColumnaTickets";
+import Estado from "../types/enums/Estado";
 
 const GerentePage: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [ticketsPH, setTicketsPH] = useState<Ticket[]>([]);
+  const [ticketsEP, setTicketsEP] = useState<Ticket[]>([]);
+  const [ticketsC, setTicketsC] = useState<Ticket[]>([]);
+  const [ticketsR, setTicketsR] = useState<Ticket[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
     const getTicketsDB = async () => {
       let ticketsDB = await getTickets();
-      setTickets(ticketsDB);
+
+      ticketsDB = ticketsDB.filter(
+        (ticket) => ticket.requerimiento.area?.id == user?.area?.id
+      );
+
+      setTicketsPH(
+        ticketsDB.filter((ticket) => ticket.estado === Estado.POR_HACER)
+      );
+      setTicketsEP(
+        ticketsDB.filter((ticket) => ticket.estado === Estado.EN_PROGRESO)
+      );
+      setTicketsC(
+        ticketsDB.filter((ticket) => ticket.estado === Estado.COMPLETADO)
+      );
+      setTicketsR(
+        ticketsDB.filter((ticket) => ticket.estado === Estado.RECHAZADO)
+      );
     };
 
     getTicketsDB();
@@ -114,32 +134,88 @@ const GerentePage: React.FC = () => {
                     padding: 2,
                     borderBottom: "1px solid #888",
                     height: "10%",
+                    display: "flex",
                   }}
                 >
                   <Typography variant="h6">POR HACER</Typography>
+                  <Box
+                    sx={{
+                      height: 30,
+                      width: 50,
+                      bgcolor: "#333",
+                      color: "#fff",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 5,
+                      ml: 3,
+                    }}
+                  >
+                    {ticketsPH.length}
+                  </Box>
                 </Box>
-                <Box
-                  sx={{
-                    padding: 2,
-                    height: "90%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  {tickets.map((ticket) => (
-                    <TicketGerente ticket={ticket}></TicketGerente>
-                  ))}
-                </Box>
+                <ColumnaTickets tickets={ticketsPH} />
               </Box>
             </Grid>
             <Grid item xs={3}>
-              <Box sx={{}}></Box>
+              <Box
+                sx={{
+                  border: "1px solid #888",
+                  height: "100%",
+                  borderRadius: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    padding: 2,
+                    borderBottom: "1px solid #888",
+                    height: "10%",
+                  }}
+                >
+                  <Typography variant="h6">EN PROGRESO</Typography>
+                </Box>
+                <ColumnaTickets tickets={ticketsEP} />
+              </Box>
             </Grid>
             <Grid item xs={3}>
-              <Box sx={{}}></Box>
+              <Box
+                sx={{
+                  border: "1px solid #888",
+                  height: "100%",
+                  borderRadius: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    padding: 2,
+                    borderBottom: "1px solid #888",
+                    height: "10%",
+                  }}
+                >
+                  <Typography variant="h6">COMPLETADO</Typography>
+                </Box>
+                <ColumnaTickets tickets={ticketsC} />
+              </Box>
             </Grid>
             <Grid item xs={3}>
-              <Box sx={{}}></Box>
+              <Box
+                sx={{
+                  border: "1px solid #888",
+                  height: "100%",
+                  borderRadius: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    padding: 2,
+                    borderBottom: "1px solid #888",
+                    height: "10%",
+                  }}
+                >
+                  <Typography variant="h6">RECHAZADO</Typography>
+                </Box>
+                <ColumnaTickets tickets={ticketsR} />
+              </Box>
             </Grid>
           </Grid>
         </Box>
