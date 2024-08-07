@@ -77,20 +77,21 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
           // Buscar el usuario por correo electrónico
           let fetchedUser = await getUsuarioByEmail(auth0User.email);
 
+          let dbUser = fetchedUser;
           // Si el usuario no existe, crear uno nuevo
           if (!fetchedUser) {
             fetchedUser = new Usuario();
             fetchedUser.email = auth0User?.email;
             fetchedUser.urlPic = auth0User?.picture;
             fetchedUser.area = undefined;
-            await postUsuario(fetchedUser);
+            dbUser = await postUsuario(fetchedUser);
           }
 
           // Actualizar el contexto con el usuario
-          setUser(fetchedUser);
+          setUser(dbUser);
 
           // Guardar el usuario en sessionStorage
-          sessionStorage.setItem("user", JSON.stringify(fetchedUser));
+          sessionStorage.setItem("user", JSON.stringify(dbUser));
         } catch (error) {
           console.error("Error handling user:", error);
         }
