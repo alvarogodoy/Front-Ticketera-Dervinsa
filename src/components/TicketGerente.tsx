@@ -1,24 +1,42 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  Menu,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
 import Ticket from "../types/Ticket";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Prioridad from "../types/enums/Prioridad";
-import DetalleDialog from "./DetalleDialog";
+import React from "react";
+import Estado from "../types/enums/Estado";
+import { updateTicket } from "../services/TicketService";
 
 interface TicketGerenteProps {
   ticket: Ticket | null;
 }
 
 const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
-  const [open, setOpen] = useState(false);
+  const [estado, setEstado] = useState<Estado>(Estado.POR_HACER);
   const [colorPrior, setColorPrior] = useState<string>("");
   const [tiempoDesde, setTiempoDesde] = useState<string>("");
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const handleEstadoChange = async (event: SelectChangeEvent) => {
+    let newEstado = event.target.value as Estado;
 
-  const handleClose = () => {
-    setOpen(false);
+    let updatedTicket = ticket;
+
+    if (ticket) {
+      ticket.estado = newEstado;
+      updatedTicket = await updateTicket(ticket);
+    }
+
+    setEstado(newEstado);
+    ticket = updatedTicket;
   };
 
   function calculateTimeElapsed() {
@@ -110,12 +128,21 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
         <Typography variant="subtitle1" color={"#555"}>
           <b>{ticket?.prioridad}</b>
         </Typography>
-        <Button variant="contained" onClick={handleOpen}>
-          Ver detalle
-        </Button>
-        {ticket ? (
-          <DetalleDialog open={open} onClose={handleClose} ticket={ticket} />
-        ) : null}
+        <FormControl variant="outlined" fullWidth>
+          <InputLabel id="requirement-label">Requerimiento</InputLabel>
+          <Select
+            labelId="requirement-label"
+            id="requirement-select"
+            value={estado}
+            onChange={handleEstadoChange}
+            label="Requerimiento"
+          >
+            <MenuItem value={Estado.POR_HACER}>Por hacer</MenuItem>
+            <MenuItem value={Estado.EN_PROGRESO}>En progreso</MenuItem>
+            <MenuItem value={Estado.COMPLETADO}>Completado</MenuItem>
+            <MenuItem value={Estado.RECHAZADO}>Rechazado</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
     </Box>
   );

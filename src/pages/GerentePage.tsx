@@ -170,9 +170,25 @@ const GerentePage: React.FC = () => {
                     padding: 2,
                     borderBottom: "1px solid #888",
                     height: "10%",
+                    display: "flex",
                   }}
                 >
                   <Typography variant="h6">EN PROGRESO</Typography>
+                  <Box
+                    sx={{
+                      height: 30,
+                      width: 50,
+                      bgcolor: "#333",
+                      color: "#fff",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 5,
+                      ml: 3,
+                    }}
+                  >
+                    {ticketsEP.length}
+                  </Box>
                 </Box>
                 <ColumnaTickets tickets={ticketsEP} />
               </Box>
@@ -190,9 +206,25 @@ const GerentePage: React.FC = () => {
                     padding: 2,
                     borderBottom: "1px solid #888",
                     height: "10%",
+                    display: "flex",
                   }}
                 >
                   <Typography variant="h6">COMPLETADO</Typography>
+                  <Box
+                    sx={{
+                      height: 30,
+                      width: 50,
+                      bgcolor: "#333",
+                      color: "#fff",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 5,
+                      ml: 3,
+                    }}
+                  >
+                    {ticketsC.length}
+                  </Box>
                 </Box>
                 <ColumnaTickets tickets={ticketsC} />
               </Box>
@@ -210,9 +242,25 @@ const GerentePage: React.FC = () => {
                     padding: 2,
                     borderBottom: "1px solid #888",
                     height: "10%",
+                    display: "flex",
                   }}
                 >
                   <Typography variant="h6">RECHAZADO</Typography>
+                  <Box
+                    sx={{
+                      height: 30,
+                      width: 50,
+                      bgcolor: "#333",
+                      color: "#fff",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 5,
+                      ml: 3,
+                    }}
+                  >
+                    {ticketsR.length}
+                  </Box>
                 </Box>
                 <ColumnaTickets tickets={ticketsR} />
               </Box>

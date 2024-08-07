@@ -23,11 +23,12 @@ export const getUsuarioByEmail = async (email: string) => {
   }
 };
 
-export const postUsuario = async (usuario: Usuario): Promise<void> => {
+export const postUsuario = async (usuario: Usuario) => {
   console.log(JSON.stringify(usuario));
-  await axios.post(API_URL, usuario, {
+  const response = await axios.post(API_URL, usuario, {
     headers: {
       "Content-Type": "application/json",
     },
   });
+  return response.data as Usuario;
 };
