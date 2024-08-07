@@ -64,47 +64,15 @@ const GerentePage: React.FC = () => {
           <Box
             sx={{
               width: "60%",
-              height: 150,
-              bgcolor: "#888",
-              borderRadius: 3,
+              height: 90,
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
+              flexDirection: "column",
+              padding: 1,
             }}
           >
-            {user?.area?.nombre}
-          </Box>
-          <Box
-            sx={{
-              width: "20%",
-              height: 150,
-              ml: 3,
-              bgcolor: "#888",
-              borderRadius: 3,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Filtros
-          </Box>
-          <Box
-            sx={{
-              width: "10%",
-              height: 150,
-              ml: 3,
-              bgcolor: "#888",
-              borderRadius: 3,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button onClick={handleOpen}>Crear requerimiento</Button>
-            <RequerimientoDialog open={open} onClose={handleClose} />
+            <Typography variant="h3" sx={{ fontFamily: "Segoe UI Symbol" }}>
+              <b>{user?.area?.nombre}</b>
+            </Typography>
           </Box>
         </Box>
         <Box
@@ -114,30 +82,31 @@ const GerentePage: React.FC = () => {
             alignItems: "center",
             width: "100%",
             height: "100%",
-            borderRadius: 3,
-            border: "1px solid #aaa",
-            mt: 2,
-            padding: 1,
+            mt: 1,
           }}
         >
           <Grid container spacing={2} sx={{ height: "100%", width: "100%" }}>
             <Grid item xs={3}>
               <Box
                 sx={{
-                  border: "1px solid #888",
+                  bgcolor: "#bbb",
                   height: "100%",
-                  borderRadius: 3,
+                  borderRadius: 1,
                 }}
               >
                 <Box
                   sx={{
                     padding: 2,
-                    borderBottom: "1px solid #888",
                     height: "10%",
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h6">POR HACER</Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontFamily: "Segoe UI Symbol" }}
+                  >
+                    <b>POR HACER</b>
+                  </Typography>
                   <Box
                     sx={{
                       height: 30,
@@ -160,20 +129,24 @@ const GerentePage: React.FC = () => {
             <Grid item xs={3}>
               <Box
                 sx={{
-                  border: "1px solid #888",
+                  bgcolor: "#bbb",
                   height: "100%",
-                  borderRadius: 3,
+                  borderRadius: 1,
                 }}
               >
                 <Box
                   sx={{
                     padding: 2,
-                    borderBottom: "1px solid #888",
                     height: "10%",
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h6">EN PROGRESO</Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontFamily: "Segoe UI Symbol" }}
+                  >
+                    <b>EN PROGRESO</b>
+                  </Typography>
                   <Box
                     sx={{
                       height: 30,
@@ -196,20 +169,24 @@ const GerentePage: React.FC = () => {
             <Grid item xs={3}>
               <Box
                 sx={{
-                  border: "1px solid #888",
+                  bgcolor: "#bbb",
                   height: "100%",
-                  borderRadius: 3,
+                  borderRadius: 1,
                 }}
               >
                 <Box
                   sx={{
                     padding: 2,
-                    borderBottom: "1px solid #888",
                     height: "10%",
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h6">COMPLETADO</Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontFamily: "Segoe UI Symbol" }}
+                  >
+                    <b>COMPLETO</b>
+                  </Typography>
                   <Box
                     sx={{
                       height: 30,
@@ -232,20 +209,24 @@ const GerentePage: React.FC = () => {
             <Grid item xs={3}>
               <Box
                 sx={{
-                  border: "1px solid #888",
+                  bgcolor: "#bbb",
                   height: "100%",
-                  borderRadius: 3,
+                  borderRadius: 1,
                 }}
               >
                 <Box
                   sx={{
                     padding: 2,
-                    borderBottom: "1px solid #888",
                     height: "10%",
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h6">RECHAZADO</Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontFamily: "Segoe UI Symbol" }}
+                  >
+                    <b>RECHAZADO</b>
+                  </Typography>
                   <Box
                     sx={{
                       height: 30,

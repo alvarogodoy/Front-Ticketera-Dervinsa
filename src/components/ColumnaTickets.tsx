@@ -11,8 +11,7 @@ const ColumnaTickets: React.FC<ColumnaTicketsProps> = ({ tickets }) => {
     <>
       <Box
         sx={{
-          padding: 2,
-          height: "90%",
+          padding: 1,
           display: "flex",
           flexDirection: "column",
         }}

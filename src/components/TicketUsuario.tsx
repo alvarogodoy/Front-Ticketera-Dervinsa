@@ -159,7 +159,6 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
             >
               <b>{ticket?.titulo}</b>
             </Typography>
-            
           </Box>
           <Box
             sx={{
@@ -180,7 +179,7 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
               variant="subtitle1"
               sx={{
                 fontFamily: "Segoe UI Symbol",
-                fontSize: "15px"
+                fontSize: "15px",
               }}
             >
               {tiempoDesde}
@@ -221,7 +220,11 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
                     padding: "4px 8px",
                   }}
                 >
-                  <Tooltip title={`Requerimiento: ` + ticket?.requerimiento.descripcion}>
+                  <Tooltip
+                    title={
+                      `Requerimiento: ` + ticket?.requerimiento.descripcion
+                    }
+                  >
                     <Typography
                       variant="subtitle2"
                       sx={{
