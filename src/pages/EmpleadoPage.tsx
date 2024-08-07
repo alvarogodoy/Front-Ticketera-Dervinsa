@@ -1,4 +1,5 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Fab, Grid, Tooltip, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import TicketDialog from "../components/TicketDialog";
 import { useAuth } from "../context/AuthContext";
@@ -20,7 +21,7 @@ const EmpleadoPage: React.FC = () => {
     };
 
     getTicketsDB();
-  });
+  }, [user?.id]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -39,23 +40,24 @@ const EmpleadoPage: React.FC = () => {
         display: "flex",
         padding: 2,
         flexDirection: "column",
+        position: "relative", // Añadido para posicionar el FAB correctamente
       }}
     >
-      <Box
+      <TicketDialog open={open} onClose={handleClose} />
+      <Typography
+        variant="h4"
         sx={{
-          width: "60%",
-          height: 150,
-          bgcolor: "#888",
-          borderRadius: 3,
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
+          maxWidth: "350px", // adjust the max width as necessary
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          letterSpacing: ".2rem",
+          whiteSpace: "nowrap",
+          fontFamily: "Segoe UI Symbol",
+          marginLeft: 1,
         }}
       >
-        <Button onClick={handleOpen}>Nuevo ticket</Button>
-        <TicketDialog open={open} onClose={handleClose} />
-      </Box>
+        <b>MIS TICKETS:</b>
+      </Typography>
       <Box
         sx={{
           width: "100%",
@@ -69,10 +71,28 @@ const EmpleadoPage: React.FC = () => {
       >
         <Grid container spacing={3}>
           {tickets.map((ticket) => (
-            <TicketUsuario ticket={ticket} />
+            <TicketUsuario key={ticket.id} ticket={ticket} />
           ))}
         </Grid>
       </Box>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{
+          position: "absolute",
+          bottom: 60,
+          right: 48,
+        }}
+        onClick={handleOpen}
+      >
+        <Tooltip title="Nuevo Ticket">
+          <AddIcon
+            sx={{
+              fontSize: "40px"
+            }}
+          />
+        </Tooltip>
+      </Fab>
     </Box>
   );
 };

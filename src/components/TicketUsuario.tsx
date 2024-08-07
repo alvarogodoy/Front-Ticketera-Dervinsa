@@ -13,7 +13,7 @@ import Estado from "../types/enums/Estado";
 import Prioridad from "../types/enums/Prioridad";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
-import SwapHorizontalCircleIcon from "@mui/icons-material/SwapHorizontalCircle"; // POR_HACER
+import BuildCircleIcon from "@mui/icons-material/BuildCircle"; // POR_HACER
 import WatchLaterIcon from "@mui/icons-material/WatchLater"; // EN_PROGRESO
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // COMPLETADO
 import CancelIcon from "@mui/icons-material/Cancel"; // RECHAZADO
@@ -32,7 +32,7 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
     if (ticket?.estado === Estado.POR_HACER) {
       setHeaderColor("#2e60b0");
     } else if (ticket?.estado === Estado.EN_PROGRESO) {
-      setHeaderColor("#858226");
+      setHeaderColor("#c156bc");
     } else if (ticket?.estado === Estado.COMPLETADO) {
       setHeaderColor("#0c912b");
     } else {
@@ -43,7 +43,7 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
   // Map de iconos basado en el estado
   const estadoIconMap: Record<Estado, ReactElement> = {
     [Estado.POR_HACER]: (
-      <SwapHorizontalCircleIcon sx={{ color: headerColor, fontSize: 30 }} />
+      <BuildCircleIcon sx={{ color: headerColor, fontSize: 30 }} />
     ),
     [Estado.EN_PROGRESO]: (
       <WatchLaterIcon sx={{ color: headerColor, fontSize: 30 }} />
@@ -58,11 +58,11 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
 
   useEffect(() => {
     if (ticket?.prioridad === Prioridad.BAJA) {
-      setPrioridadColor("green");
+      setPrioridadColor("#3aa1da");
     } else if (ticket?.prioridad === Prioridad.MEDIA) {
-      setPrioridadColor("yellow");
+      setPrioridadColor("#f3b03b");
     } else {
-      setPrioridadColor("red");
+      setPrioridadColor("#C70039");
     }
   }, [ticket]);
 
