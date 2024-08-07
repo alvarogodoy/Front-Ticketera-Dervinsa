@@ -74,7 +74,7 @@ function Navbar() {
       </List>
     </Box>
   );
-  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -143,7 +143,22 @@ function Navbar() {
               <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
                 
                 <Tooltip title="Abrir Opciones">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <IconButton 
+                    onClick={handleOpenUserMenu} 
+                    sx={{ 
+                      p: 0, 
+                      '&:hover': {
+                        borderRadius: 2,
+                      },
+                      '&:hover .MuiTypography-root': {
+                        //color: 'rgba(255, 255, 255, 0.8)',
+                        textShadow: '0 0 5px rgba(255, 255, 255, 0.8)', // Añadido para iluminar el contorno del texto
+                      },
+                      '&:hover .MuiAvatar-root': {
+                        borderColor: 'rgba(255, 255, 255, 0.8)',
+                      },
+                    }}
+                  >
                     <Typography
                       variant="h6"
                       sx={{
@@ -154,13 +169,20 @@ function Navbar() {
                         letterSpacing: ".1rem",
                         color: "white",
                         textDecoration: "none",
-                        marginLeft: 2
+                        marginLeft: 2,
+                        border: '2px solid transparent',
+                        transition: 'border-color 0.1s ease-in-out',
                       }}
                     >
                       {user?.name}
                     </Typography>
                     <Avatar
-                      sx={{ width: 45, height: 45 }}
+                      sx={{ 
+                        width: 45, 
+                        height: 45,
+                        border: '2px solid transparent',
+                        transition: 'border-color 0.1s ease-in-out',
+                      }}
                       variant="rounded"
                       src={user?.picture}
                     />
@@ -207,7 +229,7 @@ function Navbar() {
           }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 300 },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
           }}
         >
           {drawer}
