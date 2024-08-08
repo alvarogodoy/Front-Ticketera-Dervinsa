@@ -1,13 +1,16 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Grid, TextField, Typography } from "@mui/material";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import RequerimientoDialog from "../components/RequerimientoDialog";
 import Ticket from "../types/Ticket";
 import { getTickets } from "../services/TicketService";
 import ColumnaTickets from "../components/ColumnaTickets";
 import Estado from "../types/enums/Estado";
+import SortMenu from "../components/SortMenu";
+import { sortTickets } from "../utils/Functions";
 
 const GerentePage: React.FC = () => {
+  const [sortCriteria, setSortCriteria] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [ticketsPH, setTicketsPH] = useState<Ticket[]>([]);
   const [ticketsEP, setTicketsEP] = useState<Ticket[]>([]);
@@ -15,9 +18,21 @@ const GerentePage: React.FC = () => {
   const [ticketsR, setTicketsR] = useState<Ticket[]>([]);
   const { user } = useAuth();
 
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSortChange = (sortBy: string) => {
+    setSortCriteria(sortBy);
+  };
+
   useEffect(() => {
     const getTicketsDB = async () => {
       let ticketsDB = await getTickets();
+      ticketsDB = sortTickets(sortCriteria, ticketsDB);
+      ticketsDB = ticketsDB.filter((ticket) =>
+        ticket.usuario.email?.includes(searchTerm.toLowerCase())
+      );
 
       ticketsDB = ticketsDB.filter(
         (ticket) => ticket.requerimiento.area?.id == user?.area?.id
@@ -60,20 +75,30 @@ const GerentePage: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Box
-            sx={{
-              width: "60%",
-              height: 90,
-              display: "flex",
-              flexDirection: "column",
-              padding: 1,
-            }}
-          >
-            <Typography variant="h3" sx={{ fontFamily: "Segoe UI Symbol" }}>
-              <b>{user?.area?.nombre}</b>
-            </Typography>
-          </Box>
+        <Box
+          sx={{
+            width: "100%",
+            height: 90,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 1,
+          }}
+        >
+          <Typography variant="h3" sx={{ fontFamily: "Segoe UI Symbol" }}>
+            <b>{user?.area?.nombre}</b>
+          </Typography>
+          <SortMenu
+            onSortChange={handleSortChange}
+            sx={{ marginLeft: "auto" }}
+          />
+          <TextField
+            label="Buscar por email"
+            variant="outlined"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ marginBottom: 2 }}
+          />
         </Box>
         <Box
           sx={{

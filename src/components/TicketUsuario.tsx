@@ -17,6 +17,7 @@ import BuildCircleIcon from "@mui/icons-material/BuildCircle"; // POR_HACER
 import WatchLaterIcon from "@mui/icons-material/WatchLater"; // EN_PROGRESO
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // COMPLETADO
 import CancelIcon from "@mui/icons-material/Cancel"; // RECHAZADO
+import DetalleDialog from "./DetalleDialog";
 
 interface TicketUsuarioProps {
   ticket: Ticket | null;
@@ -243,94 +244,9 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
           </Box>
         </Box>
       </Grid>
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "80%",
-            maxWidth: 800,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography id="modal-title" variant="h6" component="h2">
-              {ticket?.titulo}
-            </Typography>
-            <IconButton onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Typography id="modal-description" sx={{ mt: 2 }}>
-            {ticket?.descripcion}
-          </Typography>
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexDirection: "row",
-              gap: 2,
-            }}
-          >
-            <Box
-              sx={{
-                bgcolor: headerColor,
-                color: "#fff",
-                borderRadius: "16px",
-                padding: "4px 8px",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Estado: {ticket?.estado}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                bgcolor: prioridadColor,
-                color: "#000",
-                borderRadius: "16px",
-                padding: "4px 8px",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Prioridad: {ticket?.prioridad}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                bgcolor: "#d3d3d3",
-                color: "#000",
-                borderRadius: "16px",
-                padding: "4px 8px",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Requerimiento: {ticket?.requerimiento.descripcion}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      </Modal>
+      {ticket ? (
+        <DetalleDialog open={open} onClose={handleClose} ticket={ticket} />
+      ) : null}
     </>
   );
 };
