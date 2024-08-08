@@ -1,77 +1,19 @@
-import {
-  Avatar,
-  Box,
-  Grid,
-  IconButton,
-  Modal,
-  SelectChangeEvent,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Grid, Tooltip, Typography } from "@mui/material";
 import Ticket from "../types/Ticket";
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Prioridad from "../types/enums/Prioridad";
 import React from "react";
-import Estado from "../types/enums/Estado";
-import { updateTicket } from "../services/TicketService";
-import BuildCircleIcon from "@mui/icons-material/BuildCircle"; // POR_HACER
-import WatchLaterIcon from "@mui/icons-material/WatchLater"; // EN_PROGRESO
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // COMPLETADO
-import CancelIcon from "@mui/icons-material/Cancel"; // RECHAZADO
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import CloseIcon from "@mui/icons-material/Close";
+import DetalleDialog from "./DetalleDialog";
 
 interface TicketGerenteProps {
   ticket: Ticket | null;
 }
 
 const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
-  const [estado, setEstado] = useState<Estado>(Estado.POR_HACER);
-  const [headerColor, setHeaderColor] = useState<string>("");
   const [prioridadColor, setPrioridadColor] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [tiempoDesde, setTiempoDesde] = useState<string>("");
-
-  const handleEstadoChange = async (event: SelectChangeEvent) => {
-    let newEstado = event.target.value as Estado;
-
-    let updatedTicket = ticket;
-
-    if (ticket) {
-      ticket.estado = newEstado;
-      updatedTicket = await updateTicket(ticket);
-    }
-
-    setEstado(newEstado);
-    ticket = updatedTicket;
-  };
-
-  useEffect(() => {
-    if (ticket?.estado === Estado.POR_HACER) {
-      setHeaderColor("#2e60b0");
-    } else if (ticket?.estado === Estado.EN_PROGRESO) {
-      setHeaderColor("#c156bc");
-    } else if (ticket?.estado === Estado.COMPLETADO) {
-      setHeaderColor("#0c912b");
-    } else {
-      setHeaderColor("#8c130a");
-    }
-  }, [ticket]);
-
-  const estadoIconMap: Record<Estado, ReactElement> = {
-    [Estado.POR_HACER]: (
-      <BuildCircleIcon sx={{ color: headerColor, fontSize: 30 }} />
-    ),
-    [Estado.EN_PROGRESO]: (
-      <WatchLaterIcon sx={{ color: headerColor, fontSize: 30 }} />
-    ),
-    [Estado.COMPLETADO]: (
-      <CheckCircleIcon sx={{ color: headerColor, fontSize: 30 }} />
-    ),
-    [Estado.RECHAZADO]: (
-      <CancelIcon sx={{ color: headerColor, fontSize: 30 }} />
-    ),
-  };
 
   useEffect(() => {
     if (ticket?.prioridad === Prioridad.BAJA) {
@@ -239,93 +181,9 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
         </Box>
       </Grid>
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "80%",
-            maxWidth: 800,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography id="modal-title" variant="h6" component="h2">
-              {ticket?.titulo}
-            </Typography>
-            <IconButton onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Typography id="modal-description" sx={{ mt: 2 }}>
-            {ticket?.descripcion}
-          </Typography>
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexDirection: "row",
-              gap: 2,
-            }}
-          >
-            <Box
-              sx={{
-                bgcolor: headerColor,
-                color: "#fff",
-                borderRadius: "16px",
-                padding: "4px 8px",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Estado: {ticket?.estado}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                bgcolor: prioridadColor,
-                color: "#000",
-                borderRadius: "16px",
-                padding: "4px 8px",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Prioridad: {ticket?.prioridad}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                bgcolor: "#d3d3d3",
-                color: "#000",
-                borderRadius: "16px",
-                padding: "4px 8px",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Requerimiento: {ticket?.requerimiento.descripcion}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      </Modal>
+      {ticket ? (
+        <DetalleDialog onClose={handleClose} open={open} ticket={ticket} />
+      ) : null}
     </>
   );
 };

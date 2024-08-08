@@ -21,7 +21,7 @@ const EmpleadoPage: React.FC = () => {
     };
 
     getTicketsDB();
-  }, [user?.id]);
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -88,7 +88,7 @@ const EmpleadoPage: React.FC = () => {
         <Tooltip title="Nuevo Ticket">
           <AddIcon
             sx={{
-              fontSize: "40px"
+              fontSize: "40px",
             }}
           />
         </Tooltip>
