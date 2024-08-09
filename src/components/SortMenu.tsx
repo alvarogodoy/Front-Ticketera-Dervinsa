@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
+import SortIcon from "@mui/icons-material/Sort";
 
 interface SortMenuProps {
   onSortChange: (sortBy: string) => void;
@@ -24,14 +25,20 @@ const SortMenu: React.FC<SortMenuProps> = ({ onSortChange, sx }) => {
   };
 
   return (
-    <Box sx={sx}>
+    <Box 
+      sx={
+        sx
+      }
+    >
       <Button
         disableRipple
         disableTouchRipple
         aria-controls="sort-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        sx={{ display: "flex", alignItems: "center" }} // Alineación central para el ícono y el texto
       >
+        <SortIcon sx={{ marginRight: 1 }} />{" "}
         Ordenar por
       </Button>
       <Menu

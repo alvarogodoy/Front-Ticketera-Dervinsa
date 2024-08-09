@@ -67,11 +67,17 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
 
   return (
     <>
-      <Grid item xs={12} onClick={handleOpen} sx={{ marginBottom: 1 }}>
+      <Grid
+        item
+        
+        xl={12}
+        onClick={handleOpen}
+        sx={{ marginBottom: 1 }}
+      >
         <Box
           sx={{
             bgcolor: "#fff",
-            height: 130,
+            height: 145,
             borderRadius: 1,
             boxShadow: 2,
             display: "flex",
@@ -110,6 +116,7 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
               padding: 2,
               display: "flex",
               flexDirection: "column",
+              gap: 1,
             }}
           >
             <Typography
@@ -139,6 +146,7 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
                     filter: "brightness(1.2)", // efecto brillante
                     fontSize: 30, // tamaño del ícono (puedes ajustar el valor según sea necesario)
                     marginLeft: 0,
+                    opacity: 0.8, // ajusta este valor para hacer el icono más opaco (0.0 es completamente transparente, 1.0 es completamente opaco)
                   }}
                 />
               </Tooltip>
@@ -153,7 +161,7 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
                   sx={{
                     bgcolor: "#d3d3d3",
                     color: "#000",
-                    borderRadius: "12px",
+                    borderRadius: "8px",
                     padding: "4px 8px",
                   }}
                 >
@@ -173,7 +181,16 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
                   </Tooltip>
                 </Box>
                 <Tooltip title={ticket?.usuario.email}>
-                  <Avatar src={ticket?.usuario.urlPic} />
+                  <Avatar
+                    src={ticket?.usuario.urlPic}
+                    sx={{
+                      borderRadius: "4px",
+                      ml: 1,
+                      width: 28,
+                      height: 28,
+                      mr: 1,
+                    }}
+                  />
                 </Tooltip>
               </Box>
             </Box>

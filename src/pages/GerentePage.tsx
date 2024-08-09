@@ -1,22 +1,33 @@
-import { Box, Grid, TextField, Typography } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { Box, Grid, TextField, Typography, IconButton } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useAuth } from "../context/AuthContext";
 import Ticket from "../types/Ticket";
-import { getTickets } from "../services/TicketService";
 import ColumnaTickets from "../components/ColumnaTickets";
 import Estado from "../types/enums/Estado";
 import SortMenu from "../components/SortMenu";
 import { sortTickets } from "../utils/Functions";
+import { getTickets } from "../services/TicketService";
 
 const GerentePage: React.FC = () => {
   const [sortCriteria, setSortCriteria] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [open, setOpen] = useState(false);
   const [ticketsPH, setTicketsPH] = useState<Ticket[]>([]);
   const [ticketsEP, setTicketsEP] = useState<Ticket[]>([]);
   const [ticketsC, setTicketsC] = useState<Ticket[]>([]);
   const [ticketsR, setTicketsR] = useState<Ticket[]>([]);
+  const [collapseStates, setCollapseStates] = useState({
+    ph: false,
+    ep: false,
+    c: false,
+    r: false,
+  });
   const { user } = useAuth();
+
+  const handleCollapse = (key: keyof typeof collapseStates) => {
+    setCollapseStates((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -35,7 +46,7 @@ const GerentePage: React.FC = () => {
       );
 
       ticketsDB = ticketsDB.filter(
-        (ticket) => ticket.requerimiento.area?.id == user?.area?.id
+        (ticket) => ticket.requerimiento.area?.id === user?.area?.id
       );
 
       setTicketsPH(
@@ -55,226 +66,314 @@ const GerentePage: React.FC = () => {
     getTicketsDB();
   });
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        bgcolor: "#ddd",
+        display: "flex",
+        padding: 2,
+        flexDirection: "column",
+        position: "relative",
+      }}
+    >
       <Box
         sx={{
-          width: "100%",
-          height: "100%",
-          bgcolor: "#ddd",
           display: "flex",
-          padding: 2,
-          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <Box
+        <Typography
+          variant="h4"
           sx={{
-            width: "100%",
-            height: 90,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            padding: 1,
+            maxWidth: "350px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            letterSpacing: ".2rem",
+            whiteSpace: "nowrap",
+            fontFamily: "Segoe UI Symbol",
           }}
         >
-          <Typography variant="h3" sx={{ fontFamily: "Segoe UI Symbol" }}>
-            <b>{user?.area?.nombre}</b>
-          </Typography>
-          <SortMenu
-            onSortChange={handleSortChange}
-            sx={{ marginLeft: "auto" }}
-          />
+          <b>{user?.area?.nombre}</b>
+        </Typography>
+
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <SortMenu onSortChange={handleSortChange} />
           <TextField
+            sx={{
+              zoom: "75%",
+              marginLeft: 2,
+              width: 180,
+            }}
             label="Buscar por email"
             variant="outlined"
             value={searchTerm}
             onChange={handleSearchChange}
-            sx={{ marginBottom: 2 }}
           />
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-            mt: 1,
-          }}
-        >
-          <Grid container spacing={2} sx={{ height: "100%", width: "100%" }}>
-            <Grid item xs={3}>
+      </Box>
+
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          borderRadius: 1,
+          border: "1px solid #aaa",
+          mt: 2,
+          padding: 1,
+          overflow: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }}
+      >
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box
+              sx={{
+                bgcolor: "#bbb",
+                borderRadius: 1,
+              }}
+            >
               <Box
                 sx={{
-                  bgcolor: "#bbb",
-                  height: "100%",
-                  borderRadius: 1,
+                  padding: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
+                onClick={() => handleCollapse("ph")}
               >
-                <Box
+                <Typography
+                  variant="h6"
                   sx={{
-                    padding: 2,
-                    height: "10%",
-                    display: "flex",
+                    fontFamily: "Segoe UI Symbol",
+                    maxWidth: "250px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    marginLeft: 2,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontFamily: "Segoe UI Symbol" }}
-                  >
-                    <b>POR HACER</b>
-                  </Typography>
+                  <b>POR HACER</b>
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexGrow: 1,
+                    justifyContent: "flex-end", // Alinea los elementos al final
+                  }}
+                >
                   <Box
                     sx={{
-                      height: 30,
-                      width: 50,
+                      height: 24,
+                      width: 40,
                       bgcolor: "#333",
                       color: "#fff",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 5,
-                      ml: 3,
+                      marginRight: 1, // Ajusta el margen si es necesario
                     }}
                   >
                     {ticketsPH.length}
                   </Box>
+                  <IconButton size="small">
+                    {collapseStates.ph ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                  </IconButton>
                 </Box>
-                <ColumnaTickets tickets={ticketsPH} />
               </Box>
-            </Grid>
-            <Grid item xs={3}>
+              {!collapseStates.ph && <ColumnaTickets tickets={ticketsPH} />}
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box
+              sx={{
+                bgcolor: "#bbb",
+                borderRadius: 1,
+              }}
+            >
               <Box
                 sx={{
-                  bgcolor: "#bbb",
-                  height: "100%",
-                  borderRadius: 1,
+                  padding: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
+                onClick={() => handleCollapse("ep")}
               >
-                <Box
+                <Typography
+                  variant="h6"
                   sx={{
-                    padding: 2,
-                    height: "10%",
-                    display: "flex",
+                    fontFamily: "Segoe UI Symbol",
+                    maxWidth: "250px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    marginLeft: 2,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontFamily: "Segoe UI Symbol" }}
-                  >
-                    <b>EN PROGRESO</b>
-                  </Typography>
+                  <b>EN PROGRESO</b>
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexGrow: 1,
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <Box
                     sx={{
-                      height: 30,
-                      width: 50,
+                      height: 24,
+                      width: 40,
                       bgcolor: "#333",
                       color: "#fff",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 5,
-                      ml: 3,
+                      marginRight: 1,
                     }}
                   >
                     {ticketsEP.length}
                   </Box>
+                  <IconButton size="small">
+                    {collapseStates.ep ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                  </IconButton>
                 </Box>
-                <ColumnaTickets tickets={ticketsEP} />
               </Box>
-            </Grid>
-            <Grid item xs={3}>
+              {!collapseStates.ep && <ColumnaTickets tickets={ticketsEP} />}
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box
+              sx={{
+                bgcolor: "#bbb",
+                borderRadius: 1,
+              }}
+            >
               <Box
                 sx={{
-                  bgcolor: "#bbb",
-                  height: "100%",
-                  borderRadius: 1,
+                  padding: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
+                onClick={() => handleCollapse("c")}
               >
-                <Box
+                <Typography
+                  variant="h6"
                   sx={{
-                    padding: 2,
-                    height: "10%",
-                    display: "flex",
+                    fontFamily: "Segoe UI Symbol",
+                    maxWidth: "250px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    marginLeft: 2,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontFamily: "Segoe UI Symbol" }}
-                  >
-                    <b>COMPLETO</b>
-                  </Typography>
+                  <b>COMPLETADO</b>
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexGrow: 1,
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <Box
                     sx={{
-                      height: 30,
-                      width: 50,
+                      height: 24,
+                      width: 40,
                       bgcolor: "#333",
                       color: "#fff",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 5,
-                      ml: 3,
+                      marginRight: 1,
                     }}
                   >
                     {ticketsC.length}
                   </Box>
+                  <IconButton size="small">
+                    {collapseStates.c ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                  </IconButton>
                 </Box>
-                <ColumnaTickets tickets={ticketsC} />
               </Box>
-            </Grid>
-            <Grid item xs={3}>
+              {!collapseStates.c && <ColumnaTickets tickets={ticketsC} />}
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box
+              sx={{
+                bgcolor: "#bbb",
+                borderRadius: 1,
+              }}
+            >
               <Box
                 sx={{
-                  bgcolor: "#bbb",
-                  height: "100%",
-                  borderRadius: 1,
+                  padding: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
+                onClick={() => handleCollapse("r")}
               >
-                <Box
+                <Typography
+                  variant="h6"
                   sx={{
-                    padding: 2,
-                    height: "10%",
-                    display: "flex",
+                    fontFamily: "Segoe UI Symbol",
+                    maxWidth: "250px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    marginLeft: 2,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontFamily: "Segoe UI Symbol" }}
-                  >
-                    <b>RECHAZADO</b>
-                  </Typography>
+                  <b>RECHAZADO</b>
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexGrow: 1,
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <Box
                     sx={{
-                      height: 30,
-                      width: 50,
+                      height: 24,
+                      width: 40,
                       bgcolor: "#333",
                       color: "#fff",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 5,
-                      ml: 3,
+                      marginRight: 1,
                     }}
                   >
                     {ticketsR.length}
                   </Box>
+                  <IconButton size="small">
+                    {collapseStates.r ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                  </IconButton>
                 </Box>
-                <ColumnaTickets tickets={ticketsR} />
               </Box>
-            </Grid>
+              {!collapseStates.r && <ColumnaTickets tickets={ticketsR} />}
+            </Box>
           </Grid>
-        </Box>
+        </Grid>
       </Box>
-    </>
+    </Box>
   );
 };
 
