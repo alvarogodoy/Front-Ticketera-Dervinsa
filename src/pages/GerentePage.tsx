@@ -91,7 +91,7 @@ const GerentePage: React.FC = () => {
             maxWidth: "350px",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            letterSpacing: ".2rem",
+            letterSpacing: ".1rem",
             whiteSpace: "nowrap",
             fontFamily: "Segoe UI Symbol",
           }}
