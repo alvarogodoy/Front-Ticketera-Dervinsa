@@ -27,13 +27,12 @@ const HomePage: React.FC = () => {
             variant="h3"
             gutterBottom
             sx={{
-              marginLeft: 2,
               fontFamily: "Segoe UI Symbol",
             }}
           >
             Bienvenido a la Ticketera de
           </Typography>
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 4 , marginTop: 3,}}>
             <img src="/img/logo1.png" alt="Logo" style={{ width: "300px" }} />
           </Box>
           <Button
