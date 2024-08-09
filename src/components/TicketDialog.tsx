@@ -11,6 +11,7 @@ import {
   InputLabel,
   FormControl,
   Box,
+  IconButton,
 } from "@mui/material";
 import Ticket from "../types/Ticket";
 import Area from "../types/Area";
@@ -20,6 +21,7 @@ import { getRequerimientos } from "../services/RequerimientoService";
 import { useAuth } from "../context/AuthContext";
 import { postTicket } from "../services/TicketService";
 import Prioridad from "../types/enums/Prioridad";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface TicketFormProps {
   onClose: () => void;
@@ -43,24 +45,22 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     };
 
     getAreasDB();
-  });
+  }, []);
 
   useEffect(() => {
     const getReqsDB = async () => {
       let reqsDB = await getRequerimientos();
       reqsDB = reqsDB.filter((req) => req.area?.nombre === area);
-      console.log(reqsDB);
-
       setRequerimientos(reqsDB);
     };
 
     getReqsDB();
   }, [area]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
-    let req = requerimientos.filter((r) => r.descripcion == requerimiento)[0];
+    let req = requerimientos.filter((r) => r.descripcion === requerimiento)[0];
 
     const newTicket: Ticket = new Ticket();
 
@@ -81,6 +81,17 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     onClose();
   };
 
+  // Verifica si el botón de crear ticket debe estar deshabilitado
+  const isSubmitDisabled = (): boolean => {
+    return (
+      !titulo || 
+      !descripcion || 
+      !area || 
+      !requerimiento || 
+      requerimientos.length === 0
+    );
+  };
+
   return (
     <Dialog
       open={open}
@@ -89,7 +100,19 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
       fullWidth
       sx={{ borderRadius: 3 }}
     >
-      <DialogTitle>Crear Ticket</DialogTitle>
+      <Box sx={{ marginBottom: -2, display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: 1 }}>
+        <DialogTitle>
+          <Box sx={{ paddingLeft: 1, marginTop: 2, fontSize: 26 }}>
+            <b>Nuevo Ticket</b>
+          </Box>
+        </DialogTitle>
+        <IconButton
+          onClick={onClose}
+          sx={{ marginTop: 2, marginRight: 2 }}
+        >
+          <CloseIcon sx={{ fontSize: 30 }} />
+        </IconButton>
+      </Box>
       <DialogContent>
         <Box
           component="form"
@@ -113,15 +136,15 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
             required
           />
           <FormControl variant="outlined" required>
-            <InputLabel id="area-label">Area</InputLabel>
+            <InputLabel id="area-label">Área</InputLabel>
             <Select
               labelId="area-label"
               value={area}
               onChange={(e) => setArea(e.target.value as string)}
-              label="Area"
+              label="Área"
             >
               {areas.map((a) => (
-                <MenuItem value={a.nombre}>{a.nombre}</MenuItem>
+                <MenuItem key={a.nombre} value={a.nombre}>{a.nombre}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -132,35 +155,38 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
               value={requerimiento}
               onChange={(e) => setRequerimiento(e.target.value as string)}
               label="Requerimiento"
+              disabled={requerimientos.length === 0}
             >
               {requerimientos.map((req) => (
-                <MenuItem value={req.descripcion}>{req.descripcion}</MenuItem>
+                <MenuItem key={req.descripcion} value={req.descripcion}>{req.descripcion}</MenuItem>
               ))}
             </Select>
           </FormControl>
           <FormControl variant="outlined" required>
-            <InputLabel id="requirement-label">Prioridad</InputLabel>
+            <InputLabel id="prioridad-label">Prioridad</InputLabel>
             <Select
-              labelId="requirement-label"
+              labelId="prioridad-label"
               value={prioridad}
               onChange={(e) => setPrioridad(e.target.value as Prioridad)}
-              label="Requerimiento"
+              label="Prioridad"
             >
               <MenuItem value={Prioridad.BAJA}>Baja</MenuItem>
               <MenuItem value={Prioridad.MEDIA}>Media</MenuItem>
               <MenuItem value={Prioridad.ALTA}>Alta</MenuItem>
             </Select>
           </FormControl>
+          <DialogActions sx={{ padding: 0, paddingTop: 2 }}>
+            <Button 
+              onClick={handleSubmit} 
+              color="primary" 
+              variant="contained" 
+              disabled={isSubmitDisabled()}
+            >
+              Crear Ticket
+            </Button>
+          </DialogActions>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancelar
-        </Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained">
-          Crear Ticket
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

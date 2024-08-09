@@ -88,9 +88,11 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
         >
           <Typography
             id="modal-title"
-            variant="h6"
+            variant="h5"
             component="h2"
-            sx={{ fontFamily: "Segoe UI Symbol" }}
+            sx={{
+              fontFamily: "Segoe UI Symbol",
+            }}
           >
             <b>{ticket?.titulo}</b>
           </Typography>
@@ -99,11 +101,11 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
           </IconButton>
         </Box>
         {user?.rol === Rol.GERENTE ? (
-          <FormControl variant="filled" required>
+          <FormControl variant="standard" required sx={{ marginTop: 1, }}>
             <Select
               value={ticket.estado}
               onChange={handleEstadoChange}
-              sx={{ width: 160, height: 50 }}
+              sx={{ width: 160, height: 40 }}
             >
               <MenuItem value={Estado.POR_HACER}>
                 <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
@@ -129,7 +131,14 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
           </FormControl>
         ) : null}
 
-        <Typography variant="subtitle1" sx={{ fontFamily: "Segoe UI Symbol" }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            marginTop: 3,
+            letterSpacing: ".1rem",
+            fontFamily: "Segoe UI Symbol",
+            }}
+          >
           <b>Detalles</b>
         </Typography>
         <Box p={2}>
@@ -139,11 +148,12 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               fontFamily: "Segoe UI Symbol",
               display: "flex",
               alignItems: "center",
+              marginBottom: 1.2,
             }}
           >
             Usuario:
             <Avatar
-              sx={{ ml: 1, width: 30, height: 30, mr: 1 }}
+              sx={{ borderRadius: "4px", ml: 1, width: 24, height: 24, mr: 1 }}
               src={ticket.usuario.urlPic}
             />
             {ticket.usuario.email}
@@ -154,6 +164,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               fontFamily: "Segoe UI Symbol",
               display: "flex",
               alignItems: "center",
+              marginBottom: 1.2,
             }}
           >
             Prioridad:
@@ -184,7 +195,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               sx={{
                 bgcolor: "#d3d3d3",
                 color: "#000",
-                borderRadius: "16px",
+                borderRadius: "8px",
                 padding: "4px 8px",
                 ml: 1,
               }}
@@ -193,12 +204,28 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             </Box>
           </Typography>
         </Box>
-        <Typography variant="subtitle1" sx={{ fontFamily: "Segoe UI Symbol" }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            marginTop: 1,
+            letterSpacing: ".1rem",
+            fontFamily: "Segoe UI Symbol",
+            }}
+          >
           <b>Descripción</b>
         </Typography>
-        <Typography variant="subtitle1" sx={{ fontFamily: "Segoe UI Symbol" }}>
-          {ticket.descripcion}
-        </Typography>
+        <Box p={2}>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontFamily: "Segoe UI Symbol",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {ticket.descripcion}
+          </Typography>
+        </Box>
       </Box>
     </Modal>
   );

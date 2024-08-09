@@ -1,12 +1,4 @@
-import {
-  Grid,
-  Box,
-  Typography,
-  Modal,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Grid, Box, Typography, Tooltip } from "@mui/material";
 import Ticket from "../types/Ticket";
 import { ReactElement, useEffect, useState } from "react";
 import Estado from "../types/enums/Estado";
@@ -44,16 +36,16 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
   // Map de iconos basado en el estado
   const estadoIconMap: Record<Estado, ReactElement> = {
     [Estado.POR_HACER]: (
-      <BuildCircleIcon sx={{ color: headerColor, fontSize: 30 }} />
+      <BuildCircleIcon sx={{ color: headerColor, fontSize: 32 }} />
     ),
     [Estado.EN_PROGRESO]: (
-      <WatchLaterIcon sx={{ color: headerColor, fontSize: 30 }} />
+      <WatchLaterIcon sx={{ color: headerColor, fontSize: 32 }} />
     ),
     [Estado.COMPLETADO]: (
-      <CheckCircleIcon sx={{ color: headerColor, fontSize: 30 }} />
+      <CheckCircleIcon sx={{ color: headerColor, fontSize: 32 }} />
     ),
     [Estado.RECHAZADO]: (
-      <CancelIcon sx={{ color: headerColor, fontSize: 30 }} />
+      <CancelIcon sx={{ color: headerColor, fontSize: 32 }} />
     ),
   };
 
@@ -126,8 +118,8 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
         <Box
           sx={{
             bgcolor: "#fff",
-            height: 150,
-            borderRadius: 2,
+            height: 145,
+            borderRadius: 1,
             boxShadow: 2,
             display: "flex",
             flexDirection: "column",
@@ -144,7 +136,6 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
             sx={{
               padding: 1,
               color: "#000",
-              //bgcolor: headerColor,
             }}
           >
             <Typography
@@ -201,8 +192,9 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
                     strokeWidth: 1, // grosor del contorno
                     fill: prioridadColor, // color de relleno del ícono
                     filter: "brightness(1.2)", // efecto brillante
-                    fontSize: 30, // tamaño del ícono (puedes ajustar el valor según sea necesario)
+                    fontSize: 32, // tamaño del ícono (puedes ajustar el valor según sea necesario)
                     marginLeft: 0,
+                    opacity: 0.8, // ajusta este valor para hacer el icono más opaco (0.0 es completamente transparente, 1.0 es completamente opaco)
                   }}
                 />
               </Tooltip>
@@ -217,7 +209,7 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
                   sx={{
                     bgcolor: "#d3d3d3",
                     color: "#000",
-                    borderRadius: "12px",
+                    borderRadius: "8px",
                     padding: "4px 8px",
                   }}
                 >
