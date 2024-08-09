@@ -12,7 +12,7 @@ const HomePage: React.FC = () => {
         alignItems: "center",
         //justifyContent: 'center',
         marginTop: 10,
-        minHeight: "100vh",
+        //minHeight: "100vh",
         textAlign: "center",
         padding: 2,
       }}
