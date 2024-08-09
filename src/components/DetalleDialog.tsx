@@ -77,6 +77,8 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
           p: 2,
           display: "flex",
           flexDirection: "column",
+          maxHeight: "80vh", // Limita la altura del modal para que no ocupe toda la pantalla
+          overflow: "auto", // Permite scroll si el contenido es demasiado largo
         }}
       >
         <Box
@@ -92,6 +94,9 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             component="h2"
             sx={{
               fontFamily: "Segoe UI Symbol",
+              overflow: "hidden", // Oculta el desbordamiento
+              textOverflow: "ellipsis", // Muestra elipsis si el texto es demasiado largo
+              //whiteSpace: "nowrap", // Evita que el texto se envuelva
             }}
           >
             <b>{ticket?.titulo}</b>
@@ -101,7 +106,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
           </IconButton>
         </Box>
         {user?.rol === Rol.GERENTE ? (
-          <FormControl variant="standard" required sx={{ marginTop: 1, }}>
+          <FormControl variant="standard" required sx={{ marginTop: 1 }}>
             <Select
               value={ticket.estado}
               onChange={handleEstadoChange}
@@ -137,8 +142,8 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             marginTop: 3,
             letterSpacing: ".1rem",
             fontFamily: "Segoe UI Symbol",
-            }}
-          >
+          }}
+        >
           <b>Detalles</b>
         </Typography>
         <Box p={2}>
@@ -198,6 +203,9 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                 borderRadius: "8px",
                 padding: "4px 8px",
                 ml: 1,
+                overflow: "hidden", // Oculta el desbordamiento
+                textOverflow: "ellipsis", // Muestra elipsis si el texto es demasiado largo
+                whiteSpace: "nowrap", // Evita que el texto se envuelva
               }}
             >
               {ticket.requerimiento.descripcion}
@@ -210,17 +218,18 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             marginTop: 1,
             letterSpacing: ".1rem",
             fontFamily: "Segoe UI Symbol",
-            }}
-          >
+          }}
+        >
           <b>Descripción</b>
         </Typography>
-        <Box p={2}>
+        <Box p={2} sx={{ overflow: "auto" }}>
           <Typography
             variant="subtitle1"
             sx={{
               fontFamily: "Segoe UI Symbol",
               display: "flex",
               alignItems: "center",
+              whiteSpace: "pre-wrap", // Permite el ajuste del texto largo
             }}
           >
             {ticket.descripcion}
