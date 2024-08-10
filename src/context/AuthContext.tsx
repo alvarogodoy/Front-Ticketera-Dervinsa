@@ -81,6 +81,7 @@ const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
           // Si el usuario no existe, crear uno nuevo
           if (!fetchedUser) {
             fetchedUser = new Usuario();
+            fetchedUser.nombre = auth0User?.name;
             fetchedUser.email = auth0User?.email;
             fetchedUser.urlPic = auth0User?.picture;
             fetchedUser.area = undefined;

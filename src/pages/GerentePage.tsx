@@ -41,8 +41,10 @@ const GerentePage: React.FC = () => {
     const getTicketsDB = async () => {
       let ticketsDB = await getTickets();
       ticketsDB = sortTickets(sortCriteria, ticketsDB);
-      ticketsDB = ticketsDB.filter((ticket) =>
-        ticket.usuario.email?.includes(searchTerm.toLowerCase())
+      ticketsDB = ticketsDB.filter(
+        (ticket) =>
+          ticket.usuario.email?.includes(searchTerm.toLowerCase()) ||
+          ticket.usuario.nombre?.includes(searchTerm.toLowerCase())
       );
 
       ticketsDB = ticketsDB.filter(
@@ -184,7 +186,11 @@ const GerentePage: React.FC = () => {
                     {ticketsPH.length}
                   </Box>
                   <IconButton size="small">
-                    {collapseStates.ph ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                    {collapseStates.ph ? (
+                      <ExpandMoreIcon />
+                    ) : (
+                      <ExpandLessIcon />
+                    )}
                   </IconButton>
                 </Box>
               </Box>
@@ -244,7 +250,11 @@ const GerentePage: React.FC = () => {
                     {ticketsEP.length}
                   </Box>
                   <IconButton size="small">
-                    {collapseStates.ep ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                    {collapseStates.ep ? (
+                      <ExpandMoreIcon />
+                    ) : (
+                      <ExpandLessIcon />
+                    )}
                   </IconButton>
                 </Box>
               </Box>
