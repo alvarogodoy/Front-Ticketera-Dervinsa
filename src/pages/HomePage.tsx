@@ -1,8 +1,17 @@
+import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const HomePage: React.FC = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard"); // Redirige a una ruta protegida si ya está autenticado
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <Container
@@ -10,9 +19,7 @@ const HomePage: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        //justifyContent: 'center',
         marginTop: 10,
-        //minHeight: "100vh",
         textAlign: "center",
         padding: 2,
       }}
@@ -32,7 +39,7 @@ const HomePage: React.FC = () => {
           >
             Bienvenido a la Ticketera de
           </Typography>
-          <Box sx={{ mb: 4 , marginTop: 3,}}>
+          <Box sx={{ mb: 4, marginTop: 3 }}>
             <img src="/img/logo1.png" alt="Logo" style={{ width: "300px" }} />
           </Box>
           <Button
