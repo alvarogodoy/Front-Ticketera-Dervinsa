@@ -67,13 +67,7 @@ const TicketGerente: React.FC<TicketGerenteProps> = ({ ticket }) => {
 
   return (
     <>
-      <Grid
-        item
-        
-        xl={12}
-        onClick={handleOpen}
-        sx={{ marginBottom: 1 }}
-      >
+      <Grid item xl={12} onClick={handleOpen} sx={{ marginBottom: 1 }}>
         <Box
           sx={{
             bgcolor: "#fff",
