@@ -5,6 +5,7 @@ import Usuario from "./Usuario";
 
 class Ticket {
     id : number = 0;
+    eliminado: boolean = false;
     titulo: string = '';
     descripcion: string = '';
     fechaCreacion: string = new Date().toISOString();

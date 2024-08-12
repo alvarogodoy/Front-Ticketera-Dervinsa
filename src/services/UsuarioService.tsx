@@ -32,3 +32,15 @@ export const postUsuario = async (usuario: Usuario) => {
   });
   return response.data as Usuario;
 };
+
+export const updateUsuario = async (usuario: Usuario) => {
+  console.log(usuario);
+
+  const response = await axios.put(`${API_URL}/${usuario.id}`, usuario, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response.data as Usuario;
+};
