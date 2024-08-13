@@ -16,19 +16,32 @@ import {
   Typography,
 } from "@mui/material";
 import Usuario from "../types/Usuario";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Rol from "../types/enums/Rol";
 import { updateUsuario } from "../services/UsuarioService";
+import Area from "../types/Area";
+import { getAreas } from "../services/AreaService";
 
 interface RowUsuarioProps {
   usuario: Usuario;
 }
 
 const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
+  const [area, setArea] = useState<string | undefined>(usuario.area?.nombre);
+  const [areas, setAreas] = useState<Area[]>([]);
   const [rol, setRol] = useState<Rol>(usuario.rol);
   const [habilitado, setHabilitado] = useState<boolean>(!usuario.eliminado);
   const [tempHabilitado, setTempHabilitado] = useState<boolean>(habilitado);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const getAreasDB = async () => {
+      let areasDB = await getAreas();
+      setAreas(areasDB);
+    };
+
+    getAreasDB();
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,6 +49,20 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAreaChange = async (event: SelectChangeEvent) => {
+    let newAreaStr = event.target.value as string;
+    let updatedUser = usuario;
+
+    let newArea = areas.find((a) => a.nombre === newAreaStr);
+
+    if (usuario) {
+      usuario.area = newArea;
+      updatedUser = await updateUsuario(usuario);
+    }
+    usuario = updatedUser;
+    setArea(newAreaStr);
   };
 
   const handleChangeHabilitado = (
@@ -51,13 +78,16 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
     } else {
       // Si quiere habilitarlo, lo cambia directamente
       setHabilitado(event.target.checked);
+      usuario.eliminado = !event.target.checked;
+      updateUsuario(usuario);
     }
   };
 
   const handleConfirmDisable = async () => {
     setHabilitado(tempHabilitado);
     handleClose();
-    // Aquí puedes realizar alguna acción adicional si es necesario, como una llamada al backend
+    usuario.eliminado = !tempHabilitado;
+    updateUsuario(usuario);
   };
 
   const handleRolChange = async (event: SelectChangeEvent) => {
@@ -66,6 +96,9 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
 
     if (usuario) {
       usuario.rol = newRol;
+      if (newRol === Rol.EMPLEADO || newRol === Rol.ADMIN) {
+        usuario.area = undefined;
+      }
       updatedUser = await updateUsuario(usuario);
     }
     usuario = updatedUser;
@@ -78,7 +111,25 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
       <TableCell>{usuario.nombre}</TableCell>
       <TableCell>{usuario.email}</TableCell>
       <TableCell>
-        {usuario.area != null ? usuario.area.nombre : "Sin area"}
+        {usuario.rol === Rol.GERENTE ? (
+          <FormControl variant="standard" required sx={{ marginTop: 1 }}>
+            <Select
+              value={usuario.area ? area : "Sin area"}
+              onChange={handleAreaChange}
+              sx={{ width: 160, height: 40 }}
+            >
+              {areas.map((a) => (
+                <MenuItem value={a.nombre}>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>{a.nombre}</b>
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          "Sin area"
+        )}
       </TableCell>
       <TableCell>
         <FormControl variant="standard" required sx={{ marginTop: 1 }}>
