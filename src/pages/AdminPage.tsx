@@ -21,7 +21,12 @@ const AdminPage: React.FC = () => {
 
   useEffect(() => {
     const getUsuariosDB = async () => {
-      const usuariosDB = await getUsuarios();
+      let usuariosDB = await getUsuarios();
+      usuariosDB = usuariosDB.filter(
+        (usuario) =>
+          usuario.nombre?.includes(searchTerm) ||
+          usuario.email?.includes(searchTerm)
+      );
       setUsuarios(usuariosDB);
     };
 
