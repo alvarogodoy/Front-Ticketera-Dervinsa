@@ -9,6 +9,11 @@ import Estado from "../types/enums/Estado";
 import SortMenu from "../components/SortMenu";
 import { sortTickets } from "../utils/Functions";
 import { getTickets } from "../services/TicketService";
+import BuildCircleIcon from "@mui/icons-material/BuildCircle"; // POR_HACER
+import WatchLaterIcon from "@mui/icons-material/WatchLater"; // EN_PROGRESO
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // COMPLETADO
+import CancelIcon from "@mui/icons-material/Cancel"; // RECHAZADO
+
 
 const GerentePage: React.FC = () => {
   const [sortCriteria, setSortCriteria] = useState<string>("");
@@ -163,6 +168,14 @@ const GerentePage: React.FC = () => {
                 >
                   <b>POR HACER</b>
                 </Typography>
+                <BuildCircleIcon
+                  sx={{
+                    fontSize: 32, // tamaño del ícono (puedes ajustar el valor según sea necesario)
+                    marginLeft: 1,
+                    marginRight: 1,
+                    opacity: 0.8, // ajusta este valor para hacer el icono más opaco (0.0 es completamente transparente, 1.0 es completamente opaco)
+                  }}
+                />
                 <Box
                   sx={{
                     display: "flex",
@@ -227,6 +240,14 @@ const GerentePage: React.FC = () => {
                 >
                   <b>EN PROGRESO</b>
                 </Typography>
+                <WatchLaterIcon
+                  sx={{
+                    fontSize: 32, // tamaño del ícono (puedes ajustar el valor según sea necesario)
+                    marginLeft: 1,
+                    marginRight: 1,
+                    opacity: 0.8, // ajusta este valor para hacer el icono más opaco (0.0 es completamente transparente, 1.0 es completamente opaco)
+                  }}
+                />
                 <Box
                   sx={{
                     display: "flex",
@@ -291,6 +312,14 @@ const GerentePage: React.FC = () => {
                 >
                   <b>COMPLETADO</b>
                 </Typography>
+                <CheckCircleIcon
+                  sx={{
+                    fontSize: 32, // tamaño del ícono (puedes ajustar el valor según sea necesario)
+                    marginLeft: 1,
+                    marginRight: 1,
+                    opacity: 0.8, // ajusta este valor para hacer el icono más opaco (0.0 es completamente transparente, 1.0 es completamente opaco)
+                  }}
+                />
                 <Box
                   sx={{
                     display: "flex",
@@ -351,6 +380,14 @@ const GerentePage: React.FC = () => {
                 >
                   <b>RECHAZADO</b>
                 </Typography>
+                <CancelIcon
+                  sx={{
+                    fontSize: 32, // tamaño del ícono (puedes ajustar el valor según sea necesario)
+                    marginLeft: 1,
+                    marginRight: 1,
+                    opacity: 0.8, // ajusta este valor para hacer el icono más opaco (0.0 es completamente transparente, 1.0 es completamente opaco)
+                  }}
+                />
                 <Box
                   sx={{
                     display: "flex",

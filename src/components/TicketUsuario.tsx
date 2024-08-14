@@ -62,19 +62,6 @@ const TicketUsuario: React.FC<TicketUsuarioProps> = ({ ticket }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  /*
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-  */
-
   function calculateTimeElapsed() {
     let startDate: Date = new Date();
     if (ticket) {

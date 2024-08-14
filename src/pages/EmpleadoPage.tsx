@@ -22,6 +22,7 @@ const EmpleadoPage: React.FC = () => {
   useEffect(() => {
     const getTicketsDB = async () => {
       let ticketsDB = await getTickets();
+      ticketsDB = ticketsDB.filter((ticket) => ticket.eliminado === false);
       ticketsDB = sortTickets(sortCriteria, ticketsDB);
       ticketsDB = ticketsDB.filter((t) => t.usuario.id === user?.id);
 
