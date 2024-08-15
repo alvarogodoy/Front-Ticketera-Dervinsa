@@ -23,10 +23,7 @@ const AdminPage: React.FC = () => {
     const getUsuariosDB = async () => {
       let usuariosDB = await getUsuarios();
       usuariosDB = usuariosDB.filter(
-        (usuario) =>
-          usuario.nombre?.includes(searchTerm) ||
-          usuario.email?.includes(searchTerm)
-      );
+        (usuario) => usuario.nombre?.includes(searchTerm) || usuario.email?.includes(searchTerm));
       setUsuarios(usuariosDB);
     };
 
@@ -42,23 +39,25 @@ const AdminPage: React.FC = () => {
       sx={{
         width: "100%",
         height: "100%",
+        bgcolor: "#ddd",
         display: "flex",
-        padding: 3,
+        padding: 2,
         flexDirection: "column",
         position: "relative",
+        overflowY: "hidden",
       }}
     >
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <Typography
           variant="h4"
           sx={{
-            maxWidth: "400px",
+            maxWidth: "350px",
             overflow: "hidden",
             textOverflow: "ellipsis",
             letterSpacing: ".1rem",
@@ -71,36 +70,55 @@ const AdminPage: React.FC = () => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <TextField
             sx={{
-              mt: 3,
               zoom: "75%",
-              width: 230,
+              marginLeft: 2,
+              width: 180,
             }}
-            label="Buscar usuario"
+            label="Buscar por email"
             variant="outlined"
             value={searchTerm}
             onChange={handleSearchChange}
           />
         </Box>
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>E-Mail</TableCell>
-              <TableCell>Area</TableCell>
-              <TableCell>Rol</TableCell>
-              <TableCell>Deshabilitar/ Habilitar</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {usuarios.map((usuario) => (
-              <RowUsuario usuario={usuario} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          borderRadius: 1,
+          border: "1px solid #aaa",
+          mt: 2,
+          padding: 0.5,
+        }}
+      >
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "60vh", // Altura máxima de la tabla, ajusta según sea necesario
+            overflowY: "auto", // Permite el scroll vertical
+            scrollbarWidth: "thin", // Para navegadores que soportan scrollbarWidth
+          }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center"><b>ID</b></TableCell>
+                <TableCell align="center"><b>Nombre</b></TableCell>
+                <TableCell align="center"><b>E-Mail</b></TableCell>
+                <TableCell align="center"><b>Area</b></TableCell>
+                <TableCell align="center"><b>Rol</b></TableCell>
+                <TableCell align="center"><b>Deshabilitar/ Habilitar</b></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {usuarios.map((usuario) => (
+                <RowUsuario key={usuario.id} usuario={usuario} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Box>
   );
 };
