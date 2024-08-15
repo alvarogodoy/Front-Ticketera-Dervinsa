@@ -107,10 +107,10 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
 
   return (
     <TableRow>
-      <TableCell>{usuario.id}</TableCell>
-      <TableCell>{usuario.nombre}</TableCell>
-      <TableCell>{usuario.email}</TableCell>
-      <TableCell>
+      <TableCell align="center">{usuario.id}</TableCell>
+      <TableCell align="center">{usuario.nombre}</TableCell>
+      <TableCell align="center">{usuario.email}</TableCell>
+      <TableCell align="center">
         {usuario.rol === Rol.GERENTE ? (
           <FormControl variant="standard" required sx={{ marginTop: 1 }}>
             <Select
@@ -131,7 +131,7 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
           "Sin area"
         )}
       </TableCell>
-      <TableCell>
+      <TableCell align="center">
         <FormControl variant="standard" required sx={{ marginTop: 1 }}>
           <Select
             value={rol}
@@ -156,7 +156,7 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
           </Select>
         </FormControl>
       </TableCell>
-      <TableCell>
+      <TableCell align="center">
         <FormControlLabel
           control={
             <Checkbox
