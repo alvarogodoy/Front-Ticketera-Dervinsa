@@ -23,7 +23,10 @@ const AdminPage: React.FC = () => {
     const getUsuariosDB = async () => {
       let usuariosDB = await getUsuarios();
       usuariosDB = usuariosDB.filter(
-        (usuario) => usuario.nombre?.includes(searchTerm) || usuario.email?.includes(searchTerm));
+        (usuario) =>
+          usuario.nombre?.includes(searchTerm) ||
+          usuario.email?.includes(searchTerm)
+      );
       setUsuarios(usuariosDB);
     };
 
@@ -103,12 +106,27 @@ const AdminPage: React.FC = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell align="center"><b>ID</b></TableCell>
-                <TableCell align="center"><b>Nombre</b></TableCell>
-                <TableCell align="center"><b>E-Mail</b></TableCell>
-                <TableCell align="center"><b>Area</b></TableCell>
-                <TableCell align="center"><b>Rol</b></TableCell>
-                <TableCell align="center"><b>Deshabilitar/ Habilitar</b></TableCell>
+                <TableCell align="center">
+                  <b>ID</b>
+                </TableCell>
+                <TableCell align="center">
+                  <b>Nombre</b>
+                </TableCell>
+                <TableCell align="center">
+                  <b>E-Mail</b>
+                </TableCell>
+                <TableCell align="center">
+                  <b>Area</b>
+                </TableCell>
+                <TableCell align="center">
+                  <b>Rol</b>
+                </TableCell>
+                <TableCell align="center">
+                  <b>Habilitado</b>
+                </TableCell>
+                <TableCell align="center">
+                  <b>Editar</b>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -21,18 +21,22 @@ import Rol from "../types/enums/Rol";
 import { updateUsuario } from "../services/UsuarioService";
 import Area from "../types/Area";
 import { getAreas } from "../services/AreaService";
+import { useAuth } from "../context/AuthContext";
 
 interface RowUsuarioProps {
   usuario: Usuario;
 }
 
 const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
+  const { user } = useAuth();
   const [area, setArea] = useState<string | undefined>(usuario.area?.nombre);
   const [areas, setAreas] = useState<Area[]>([]);
   const [rol, setRol] = useState<Rol>(usuario.rol);
   const [habilitado, setHabilitado] = useState<boolean>(!usuario.eliminado);
   const [tempHabilitado, setTempHabilitado] = useState<boolean>(habilitado);
   const [open, setOpen] = useState(false);
+  const [editar, setEditar] = useState(false);
+  const [openConfirmSave, setOpenConfirmSave] = useState(false); // Estado para el diálogo de confirmación de guardar
 
   useEffect(() => {
     const getAreasDB = async () => {
@@ -41,7 +45,7 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
     };
 
     getAreasDB();
-  });
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,17 +55,53 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
     setOpen(false);
   };
 
+  const handleEditar = () => {
+    setEditar(true);
+  };
+
+  const handleGuardar = () => {
+    if (rol === Rol.GERENTE && !area) {
+      alert(
+        "Debe seleccionar un área para el rol de Gerente antes de guardar los cambios."
+      );
+    } else {
+      setOpenConfirmSave(true); // Abrir diálogo de confirmación
+    }
+  };
+  const handleConfirmSave = () => {
+    let unableSelf = false;
+    let adminSelfChange = false;
+
+    if (
+      usuario.rol === Rol.ADMIN &&
+      rol !== Rol.ADMIN &&
+      usuario.id === user?.id
+    ) {
+      adminSelfChange = true;
+    }
+
+    if (usuario.id === user?.id && habilitado === false) {
+      unableSelf = true;
+    }
+
+    usuario.rol = rol;
+    usuario.area = areas.find((a) => a.nombre === area);
+    usuario.eliminado = !habilitado;
+
+    updateUsuario(usuario);
+
+    setEditar(false);
+    setOpenConfirmSave(false);
+
+    if (adminSelfChange || unableSelf) window.location.reload();
+  };
+
+  const handleCancelSave = () => {
+    setOpenConfirmSave(false); // Cerrar diálogo sin guardar
+  };
+
   const handleAreaChange = async (event: SelectChangeEvent) => {
     let newAreaStr = event.target.value as string;
-    let updatedUser = usuario;
-
-    let newArea = areas.find((a) => a.nombre === newAreaStr);
-
-    if (usuario) {
-      usuario.area = newArea;
-      updatedUser = await updateUsuario(usuario);
-    }
-    usuario = updatedUser;
     setArea(newAreaStr);
   };
 
@@ -69,40 +109,27 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!habilitado && !event.target.checked) {
-      // Si ya está deshabilitado y el usuario quiere desmarcar el checkbox, solo lo cambia
       setHabilitado(event.target.checked);
     } else if (habilitado && !event.target.checked) {
-      // Si está habilitado y el usuario quiere desmarcarlo, pide confirmación
       setTempHabilitado(event.target.checked);
       handleClickOpen();
     } else {
-      // Si quiere habilitarlo, lo cambia directamente
       setHabilitado(event.target.checked);
-      usuario.eliminado = !event.target.checked;
-      updateUsuario(usuario);
     }
   };
 
   const handleConfirmDisable = async () => {
     setHabilitado(tempHabilitado);
     handleClose();
-    usuario.eliminado = !tempHabilitado;
-    updateUsuario(usuario);
   };
 
   const handleRolChange = async (event: SelectChangeEvent) => {
     let newRol = event.target.value as Rol;
-    let updatedUser = usuario;
-
-    if (usuario) {
-      usuario.rol = newRol;
-      if (newRol === Rol.EMPLEADO || newRol === Rol.ADMIN) {
-        usuario.area = undefined;
-      }
-      updatedUser = await updateUsuario(usuario);
+    if (newRol !== Rol.GERENTE) {
+      setArea(undefined);
     }
-    usuario = updatedUser;
-    setRol(usuario.rol);
+
+    setRol(newRol);
   };
 
   return (
@@ -111,10 +138,10 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
       <TableCell align="center">{usuario.nombre}</TableCell>
       <TableCell align="center">{usuario.email}</TableCell>
       <TableCell align="center">
-        {usuario.rol === Rol.GERENTE ? (
+        {rol === Rol.GERENTE && editar ? (
           <FormControl variant="standard" required sx={{ marginTop: 1 }}>
             <Select
-              value={usuario.area ? area : "Sin area"}
+              value={area ? area : "Sin area"}
               onChange={handleAreaChange}
               sx={{ width: 160, height: 40 }}
             >
@@ -127,47 +154,72 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
               ))}
             </Select>
           </FormControl>
+        ) : area ? (
+          area
         ) : (
           "Sin area"
         )}
       </TableCell>
       <TableCell align="center">
-        <FormControl variant="standard" required sx={{ marginTop: 1 }}>
-          <Select
-            value={rol}
-            onChange={handleRolChange}
-            sx={{ width: 160, height: 40 }}
-          >
-            <MenuItem value={Rol.ADMIN}>
-              <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                <b>Administrador</b>
-              </Typography>
-            </MenuItem>
-            <MenuItem value={Rol.GERENTE}>
-              <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                <b>Gerente</b>
-              </Typography>
-            </MenuItem>
-            <MenuItem value={Rol.EMPLEADO}>
-              <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                <b>Empleado</b>
-              </Typography>
-            </MenuItem>
-          </Select>
-        </FormControl>
+        {editar ? (
+          <FormControl variant="standard" required sx={{ marginTop: 1 }}>
+            <Select
+              value={rol}
+              onChange={handleRolChange}
+              sx={{ width: 160, height: 40 }}
+            >
+              <MenuItem value={Rol.ADMIN}>
+                <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                  <b>Administrador</b>
+                </Typography>
+              </MenuItem>
+              <MenuItem value={Rol.GERENTE}>
+                <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                  <b>Gerente</b>
+                </Typography>
+              </MenuItem>
+              <MenuItem value={Rol.EMPLEADO}>
+                <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                  <b>Empleado</b>
+                </Typography>
+              </MenuItem>
+            </Select>
+          </FormControl>
+        ) : (
+          <Typography>
+            {usuario.rol === Rol.ADMIN
+              ? "Administrador"
+              : usuario.rol === Rol.GERENTE
+              ? "Gerente"
+              : "Empleado"}
+          </Typography>
+        )}
       </TableCell>
       <TableCell align="center">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={habilitado}
-              onChange={handleChangeHabilitado}
-              name="checked"
-              color="primary"
-            />
-          }
-          label=""
-        />
+        {editar ? (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={habilitado}
+                onChange={handleChangeHabilitado}
+                name="checked"
+                color="primary"
+              />
+            }
+            label=""
+          />
+        ) : usuario.eliminado ? (
+          "No"
+        ) : (
+          "Si"
+        )}
+      </TableCell>
+      <TableCell align="center">
+        {!editar ? (
+          <Button onClick={handleEditar}>Editar</Button>
+        ) : (
+          <Button onClick={handleGuardar}>Guardar</Button>
+        )}
       </TableCell>
       <Dialog
         open={open}
@@ -189,6 +241,29 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
             Sí
           </Button>
           <Button onClick={handleClose}>No</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Diálogo para confirmar guardar cambios */}
+      <Dialog
+        open={openConfirmSave}
+        onClose={handleCancelSave}
+        aria-labelledby="confirm-save-dialog-title"
+        aria-describedby="confirm-save-dialog-description"
+      >
+        <DialogTitle id="confirm-save-dialog-title">
+          {"¿Está seguro que desea guardar los cambios?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="confirm-save-dialog-description">
+            Esta acción guardará todos los cambios realizados en este usuario.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirmSave} autoFocus>
+            Sí, guardar
+          </Button>
+          <Button onClick={handleCancelSave}>Cancelar</Button>
         </DialogActions>
       </Dialog>
     </TableRow>
