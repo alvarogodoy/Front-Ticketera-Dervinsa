@@ -9,36 +9,30 @@ import {
   Box,
   IconButton,
 } from "@mui/material";
-import Requerimiento from "../types/Requerimiento";
-import { useAuth } from "../context/AuthContext";
-import { postRequerimiento } from "../services/RequerimientoService";
 import CloseIcon from "@mui/icons-material/Close";
+import Area from "../types/Area";
+import { postArea } from "../services/AreaService";
 
-interface RequerimientoFormProps {
+interface AreaFormProps {
   onClose: () => void;
   open: boolean;
 }
 
-const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
-  onClose,
-  open,
-}) => {
-  const [descripcion, setDescripcion] = useState<string>("");
-  const { user } = useAuth();
+const AreaDialog: React.FC<AreaFormProps> = ({ onClose, open }) => {
+  const [nombre, setNombre] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newReq: Requerimiento = new Requerimiento();
-    newReq.descripcion = descripcion;
-    newReq.area = user?.area;
-    postRequerimiento(newReq);
-    setDescripcion("");
+    const newArea: Area = new Area();
+    newArea.nombre = nombre;
+    postArea(newArea);
+    setNombre("");
     onClose();
   };
 
   // Verifica si el botón de crear ticket debe estar deshabilitado
   const isSubmitDisabled = (): boolean => {
-    return !descripcion;
+    return !nombre;
   };
 
   return (
@@ -60,7 +54,7 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
       >
         <DialogTitle>
           <Box sx={{ paddingLeft: 1, marginTop: 2, fontSize: 26 }}>
-            <b>Nuevo Requerimiento</b>
+            <b>Nuevo Area</b>
           </Box>
         </DialogTitle>
         <IconButton onClick={onClose} sx={{ marginTop: 2, marginRight: 2 }}>
@@ -78,8 +72,8 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
             variant="outlined"
             multiline
             rows={1}
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
             required
           />
           <DialogActions sx={{ padding: 0, paddingTop: 2 }}>
@@ -89,7 +83,7 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
               variant="contained"
               disabled={isSubmitDisabled()}
             >
-              Crear Requerimiento
+              Crear Area
             </Button>
           </DialogActions>
         </Box>
@@ -98,4 +92,4 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
   );
 };
 
-export default RequerimientoDialog;
+export default AreaDialog;

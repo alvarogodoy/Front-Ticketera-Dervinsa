@@ -37,8 +37,8 @@ export const updateUsuario = async (usuario: Usuario) => {
   console.log(usuario);
   let area;
 
-  if (usuario.area){
-    area = {id:usuario.area.id}
+  if (usuario.area) {
+    area = { id: usuario.area.id };
   } else {
     area = null;
   }

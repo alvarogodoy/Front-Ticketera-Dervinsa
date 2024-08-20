@@ -12,3 +12,11 @@ export const getAreas = async () => {
     throw error;
   }
 };
+
+export const postArea = async (area: Area): Promise<void> => {
+  await axios.post(API_URL, area, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
