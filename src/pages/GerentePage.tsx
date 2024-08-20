@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Box, Grid, TextField, Typography, IconButton } from "@mui/material";
+import { Box, Grid, TextField, Typography, IconButton, Fab, Tooltip } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useAuth } from "../context/AuthContext";
@@ -13,10 +13,12 @@ import BuildCircleIcon from "@mui/icons-material/BuildCircle"; // POR_HACER
 import WatchLaterIcon from "@mui/icons-material/WatchLater"; // EN_PROGRESO
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // COMPLETADO
 import CancelIcon from "@mui/icons-material/Cancel"; // RECHAZADO
-
+import RequerimientoDialog from "../components/RequerimientoDialog";
+import AddIcon from "@mui/icons-material/Add";
 
 const GerentePage: React.FC = () => {
   const [sortCriteria, setSortCriteria] = useState<string>("");
+  const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [ticketsPH, setTicketsPH] = useState<Ticket[]>([]);
   const [ticketsEP, setTicketsEP] = useState<Ticket[]>([]);
@@ -74,6 +76,14 @@ const GerentePage: React.FC = () => {
     getTicketsDB();
   });
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Box
       sx={{
@@ -86,6 +96,7 @@ const GerentePage: React.FC = () => {
         position: "relative",
       }}
     >
+      <RequerimientoDialog open={open} onClose={handleClose} />
       <Box
         sx={{
           display: "flex",
@@ -421,6 +432,24 @@ const GerentePage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
+      <Fab
+        color="success"
+        aria-label="add"
+        sx={{
+          position: "absolute",
+          bottom: 60,
+          right: 48,
+        }}
+        onClick={handleOpen}
+      >
+        <Tooltip title="Nuevo Requerimiento">
+          <AddIcon
+            sx={{
+              fontSize: "40px",
+            }}
+          />
+        </Tooltip>
+      </Fab>
     </Box>
   );
 };

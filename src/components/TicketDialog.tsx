@@ -55,7 +55,7 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     };
 
     getReqsDB();
-  }, [area]);
+  });
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();

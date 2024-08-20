@@ -103,15 +103,17 @@ function Navbar() {
               >
                 TICKETERA
               </Typography>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="end"
-                onClick={handleDrawerToggle}
-                sx={{ display: { md: 'none' } }}
-              >
-                <MenuIcon />
-              </IconButton>
+              {isAuthenticated ? (
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="end"
+                  onClick={handleDrawerToggle}
+                  sx={{ display: { md: 'none' } }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              ) : null}
             </Box>
             <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", mr: 1 }}>
               <img
