@@ -7,20 +7,19 @@ import {
   TextField,
   Button,
   Box,
+  IconButton,
 } from "@mui/material";
 import Requerimiento from "../types/Requerimiento";
 import { useAuth } from "../context/AuthContext";
 import { postRequerimiento } from "../services/RequerimientoService";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface RequerimientoFormProps {
   onClose: () => void;
   open: boolean;
 }
 
-const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
-  onClose,
-  open,
-}) => {
+const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({ onClose, open }) => {
   const [descripcion, setDescripcion] = useState<string>("");
   const { user } = useAuth();
 
@@ -34,6 +33,13 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
     onClose();
   };
 
+  // Verifica si el botón de crear ticket debe estar deshabilitado
+  const isSubmitDisabled = (): boolean => {
+    return (
+      !descripcion 
+    );
+  };
+
   return (
     <Dialog
       open={open}
@@ -42,7 +48,19 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
       fullWidth
       sx={{ borderRadius: 3 }}
     >
-      <DialogTitle>Crear Requerimiento</DialogTitle>
+      <Box sx={{ marginBottom: -2, display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: 1 }}>
+        <DialogTitle>
+          <Box sx={{ paddingLeft: 1, marginTop: 2, fontSize: 26 }}>
+            <b>Nuevo Requerimiento</b>
+          </Box>
+        </DialogTitle>
+        <IconButton
+          onClick={onClose}
+          sx={{ marginTop: 2, marginRight: 2 }}
+        >
+          <CloseIcon sx={{ fontSize: 30 }} />
+        </IconButton>
+      </Box>
       <DialogContent>
         <Box
           component="form"
@@ -58,16 +76,18 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
             onChange={(e) => setDescripcion(e.target.value)}
             required
           />
+          <DialogActions sx={{ padding: 0, paddingTop: 2 }}>
+            <Button 
+              onClick={handleSubmit} 
+              color="primary" 
+              variant="contained" 
+              disabled={isSubmitDisabled()}
+            >
+              Crear Requerimiento
+            </Button>
+          </DialogActions>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancelar
-        </Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained">
-          Crear Requerimiento
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

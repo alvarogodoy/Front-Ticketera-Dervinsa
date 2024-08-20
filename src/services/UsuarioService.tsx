@@ -35,8 +35,27 @@ export const postUsuario = async (usuario: Usuario) => {
 
 export const updateUsuario = async (usuario: Usuario) => {
   console.log(usuario);
+  let area;
 
-  const response = await axios.put(`${API_URL}/${usuario.id}`, usuario, {
+  if (usuario.area){
+    area = {id:usuario.area.id}
+  } else {
+    area = null;
+  }
+
+  let usuarioToSend = {
+    id: usuario.id,
+    eliminado: usuario.eliminado,
+    nombre: usuario.nombre,
+    email: usuario.email,
+    urlPic: usuario.urlPic,
+    area: area,
+    rol: usuario.rol,
+  };
+
+  console.log(usuarioToSend);
+
+  const response = await axios.put(`${API_URL}/${usuario.id}`, usuarioToSend, {
     headers: {
       "Content-Type": "application/json",
     },
