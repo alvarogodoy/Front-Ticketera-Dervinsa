@@ -8,13 +8,18 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
   TableCell,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
 import Usuario from "../types/Usuario";
 import { useEffect, useState } from "react";
 import Rol from "../types/enums/Rol";
@@ -36,7 +41,12 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
   const [tempHabilitado, setTempHabilitado] = useState<boolean>(habilitado);
   const [open, setOpen] = useState(false);
   const [editar, setEditar] = useState(false);
-  const [openConfirmSave, setOpenConfirmSave] = useState(false); // Estado para el diálogo de confirmación de guardar
+  const [openConfirmSave, setOpenConfirmSave] = useState(false);
+
+  const [originalArea, setOriginalArea] = useState<string | undefined>(usuario.area?.nombre); // Guardar el valor original
+  const [originalRol, setOriginalRol] = useState<Rol>(usuario.rol); // Guardar el valor original
+  const [isSaveDisabled, setIsSaveDisabled] = useState<boolean>(false); // Nuevo estado para el botón de guardar
+
 
   useEffect(() => {
     const getAreasDB = async () => {
@@ -45,7 +55,23 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
     };
 
     getAreasDB();
-  }, []);
+  });
+
+  useEffect(() => {
+    // Sincronizar el estado de `habilitado` con el valor actual cuando se reentra al modo de edición
+    if (editar) {
+      setHabilitado(!usuario.eliminado);
+    }
+  }, [editar, usuario.eliminado]);
+
+  useEffect(() => {
+    // Actualizar estado del botón de guardar
+    if (rol === Rol.GERENTE && !area) {
+      setIsSaveDisabled(true);
+    } else {
+      setIsSaveDisabled(false);
+    }
+  }, [rol, area]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -56,18 +82,23 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
   };
 
   const handleEditar = () => {
+    setOriginalRol(rol); // Guardar el rol original antes de editar
+    setOriginalArea(area); // Guardar el área original antes de editar
+    setTempHabilitado(habilitado); // Guardar el estado de habilitado antes de editar
     setEditar(true);
   };
 
-  const handleGuardar = () => {
-    if (rol === Rol.GERENTE && !area) {
-      alert(
-        "Debe seleccionar un área para el rol de Gerente antes de guardar los cambios."
-      );
-    } else {
-      setOpenConfirmSave(true); // Abrir diálogo de confirmación
-    }
+  const handleCancelar = () => {
+    setRol(originalRol); // Restaurar el rol original
+    setArea(originalArea); // Restaurar el área original
+    setHabilitado(tempHabilitado); // Restaurar el estado de habilitado original
+    setEditar(false);
   };
+
+  const handleGuardar = () => {
+    setOpenConfirmSave(true);
+  };
+
   const handleConfirmSave = () => {
     let unableSelf = false;
     let adminSelfChange = false;
@@ -97,7 +128,7 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
   };
 
   const handleCancelSave = () => {
-    setOpenConfirmSave(false); // Cerrar diálogo sin guardar
+    setOpenConfirmSave(false);
   };
 
   const handleAreaChange = async (event: SelectChangeEvent) => {
@@ -133,36 +164,25 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
   };
 
   return (
-    <TableRow>
-      <TableCell align="center">{usuario.id}</TableCell>
-      <TableCell align="center">{usuario.nombre}</TableCell>
-      <TableCell align="center">{usuario.email}</TableCell>
-      <TableCell align="center">
-        {rol === Rol.GERENTE && editar ? (
-          <FormControl variant="standard" required sx={{ marginTop: 1 }}>
-            <Select
-              value={area ? area : "Sin area"}
-              onChange={handleAreaChange}
-              sx={{ width: 160, height: 40 }}
-            >
-              {areas.map((a) => (
-                <MenuItem value={a.nombre}>
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                    <b>{a.nombre}</b>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        ) : area ? (
-          area
-        ) : (
-          "Sin area"
-        )}
+    <TableRow
+      sx={{
+        backgroundColor: usuario.eliminado ? "#ffeeee" : "inherit",
+        color: usuario.eliminado ? "white" : "inherit",
+        height: 85, // Aumenta la altura de cada fila
+      }}
+    >
+      <TableCell align="center" sx={{ minWidth: 50 }}>
+        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>{usuario.id}</Typography>
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="center" sx={{ minWidth: 300 }}>
+        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>{usuario.nombre}</Typography>
+      </TableCell>
+      <TableCell align="center" sx={{ minWidth: 300 }}>
+        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>{usuario.email}</Typography>
+      </TableCell>
+      <TableCell align="center" sx={{ minWidth: 200 }}>
         {editar ? (
-          <FormControl variant="standard" required sx={{ marginTop: 1 }}>
+          <FormControl variant="standard" required sx={{ marginTop: 0 }}>
             <Select
               value={rol}
               onChange={handleRolChange}
@@ -186,7 +206,7 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
             </Select>
           </FormControl>
         ) : (
-          <Typography>
+          <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
             {usuario.rol === Rol.ADMIN
               ? "Administrador"
               : usuario.rol === Rol.GERENTE
@@ -195,7 +215,30 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="center" sx={{ minWidth: 300 }}>
+        {rol === Rol.GERENTE && editar ? (
+          <FormControl variant="standard" required sx={{ marginTop: 0 }}>
+            <Select
+              value={area ? area : "Sin area"}
+              onChange={handleAreaChange}
+              sx={{ width: 160, height: 40, fontFamily: "Segoe UI Symbol" }}
+            >
+              {areas.map((a) => (
+                <MenuItem key={a.id} value={a.nombre}>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>{a.nombre}</b>
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : (
+          <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+            {area ? area : "Sin area"}
+          </Typography>
+        )}
+      </TableCell>
+      <TableCell align="center" sx={{ minWidth: 50, justifyContent: "center" }}>
         {editar ? (
           <FormControlLabel
             control={
@@ -204,23 +247,46 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
                 onChange={handleChangeHabilitado}
                 name="checked"
                 color="primary"
+                sx={{
+                  padding: 0, // Eliminar padding adicional
+                }}
               />
             }
             label=""
+            sx={{
+              margin: 0, // Eliminar margen adicional
+            }}
           />
-        ) : usuario.eliminado ? (
-          "No"
         ) : (
-          "Si"
+          <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+            {usuario.eliminado ? "No" : "Si"}
+          </Typography>
         )}
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="center" sx={{ minWidth: 150 }}>
         {!editar ? (
-          <Button onClick={handleEditar}>Editar</Button>
+          <IconButton onClick={handleEditar}>
+            <Tooltip title="Editar Usuario">
+              <EditIcon />
+            </Tooltip>
+          </IconButton>
         ) : (
-          <Button onClick={handleGuardar}>Guardar</Button>
+          <>
+            <IconButton onClick={handleGuardar} disabled={isSaveDisabled}>
+              <Tooltip title="Guardar Cambios">
+                <SaveIcon />
+              </Tooltip>
+            </IconButton>
+            <IconButton onClick={handleCancelar}>
+              <Tooltip title="Cancelar">
+                <CancelIcon />
+              </Tooltip>
+            </IconButton>
+          </>
         )}
       </TableCell>
+
+      {/* Dialog for confirming disable */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -237,14 +303,16 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleConfirmDisable} autoFocus>
+          <Button onClick={handleConfirmDisable} color="primary" autoFocus>
             Sí
           </Button>
-          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleClose} color="secondary">
+            No
+          </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Diálogo para confirmar guardar cambios */}
+      {/* Dialog for confirming save */}
       <Dialog
         open={openConfirmSave}
         onClose={handleCancelSave}
@@ -260,10 +328,12 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleConfirmSave} autoFocus>
+          <Button onClick={handleConfirmSave} color="primary" autoFocus>
             Sí, guardar
           </Button>
-          <Button onClick={handleCancelSave}>Cancelar</Button>
+          <Button onClick={handleCancelSave} color="secondary">
+            Cancelar
+          </Button>
         </DialogActions>
       </Dialog>
     </TableRow>

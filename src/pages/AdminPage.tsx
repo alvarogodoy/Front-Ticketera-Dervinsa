@@ -1,5 +1,6 @@
 import {
   Box,
+  Fab,
   Paper,
   Table,
   TableBody,
@@ -8,16 +9,20 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Usuario from "../types/Usuario";
 import { getUsuarios } from "../services/UsuarioService";
 import RowUsuario from "../components/RowUsuario";
+import AreaDialog from "../components/AreaDialog";
+import AddIcon from "@mui/icons-material/Add";
 
 const AdminPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const getUsuariosDB = async () => {
@@ -37,6 +42,14 @@ const AdminPage: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Box
       sx={{
@@ -50,6 +63,7 @@ const AdminPage: React.FC = () => {
         overflowY: "hidden",
       }}
     >
+      <AreaDialog open={open} onClose={handleClose} />
       <Box
         sx={{
           display: "flex",
@@ -107,25 +121,25 @@ const AdminPage: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">
-                  <b>ID</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>ID</b></Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <b>Nombre</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Nombre</b></Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <b>E-Mail</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>E-Mail</b></Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <b>Area</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Rol</b></Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <b>Rol</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Area</b></Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <b>Habilitado</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Habilitado</b></Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <b>Editar</b>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Editar</b></Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -137,6 +151,24 @@ const AdminPage: React.FC = () => {
           </Table>
         </TableContainer>
       </Box>
+      <Fab
+        color="secondary"
+        aria-label="add"
+        sx={{
+          position: "absolute",
+          bottom: 60,
+          right: 48,
+        }}
+        onClick={handleOpen}
+      >
+        <Tooltip title="Nueva Area">
+          <AddIcon
+            sx={{
+              fontSize: "40px",
+            }}
+          />
+        </Tooltip>
+      </Fab>
     </Box>
   );
 };
