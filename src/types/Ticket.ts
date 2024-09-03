@@ -13,6 +13,7 @@ class Ticket {
     prioridad: Prioridad = Prioridad.BAJA;
     requerimiento: Requerimiento = new Requerimiento();
     usuario: Usuario = new Usuario();
+    asignado: Usuario | null = null;
 }
 
 export default Ticket;

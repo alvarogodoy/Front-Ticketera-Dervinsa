@@ -9,8 +9,9 @@ class Usuario {
   email: string | undefined = "";
   urlPic: string | undefined = "";
   tickets: Array<Ticket> = new Array();
+  ticketsAsignados: Array<Ticket> = new Array();
   area: Area | undefined = new Area();
-  rol: Rol = Rol.EMPLEADO;
+  rol: Rol = Rol.GERENTE;
 }
 
 export default Usuario;

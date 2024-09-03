@@ -5,6 +5,7 @@ import GerentePage from "./GerentePage";
 import EmpleadoPage from "./EmpleadoPage";
 import AdminPage from "./AdminPage";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import DefaultPage from "./DefaultPage";
 
 const DashboardPage: React.FC = () => {
   const { isLoading } = useAuth0();
@@ -42,8 +43,10 @@ const DashboardPage: React.FC = () => {
         <EmpleadoPage />
       ) : user?.rol === Rol.GERENTE ? (
         <GerentePage />
-      ) : (
+      ) : user?.rol === Rol.ADMIN ? (
         <AdminPage />
+      ) : (
+        <DefaultPage />
       )}
     </>
   );

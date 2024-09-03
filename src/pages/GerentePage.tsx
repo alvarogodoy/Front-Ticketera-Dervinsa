@@ -1,5 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Box, Grid, TextField, Typography, IconButton, Fab, Tooltip } from "@mui/material";
+import {
+  Box,
+  Grid,
+  TextField,
+  Typography,
+  IconButton,
+  Fab,
+  Tooltip,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useAuth } from "../context/AuthContext";
@@ -7,7 +15,7 @@ import Ticket from "../types/Ticket";
 import ColumnaTickets from "../components/ColumnaTickets";
 import Estado from "../types/enums/Estado";
 import SortMenu from "../components/SortMenu";
-import { sortTickets } from "../utils/Functions";
+import { filterTickets, sortTickets } from "../utils/Functions";
 import { getTickets } from "../services/TicketService";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle"; // POR_HACER
 import WatchLaterIcon from "@mui/icons-material/WatchLater"; // EN_PROGRESO
@@ -15,10 +23,14 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // COMPLETADO
 import CancelIcon from "@mui/icons-material/Cancel"; // RECHAZADO
 import RequerimientoDialog from "../components/RequerimientoDialog";
 import AddIcon from "@mui/icons-material/Add";
+import TicketDialog from "../components/TicketDialog";
+import FilterMenu from "../components/FilterMenu";
 
 const GerentePage: React.FC = () => {
   const [sortCriteria, setSortCriteria] = useState<string>("");
+  const [filterCriteria, setFilterCriteria] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [openTicket, setOpenTicket] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [ticketsPH, setTicketsPH] = useState<Ticket[]>([]);
   const [ticketsEP, setTicketsEP] = useState<Ticket[]>([]);
@@ -44,10 +56,15 @@ const GerentePage: React.FC = () => {
     setSortCriteria(sortBy);
   };
 
+  const handleFilterChange = (filterBy: string) => {
+    setFilterCriteria(filterBy);
+  };
+
   useEffect(() => {
     const getTicketsDB = async () => {
       let ticketsDB = await getTickets();
       ticketsDB = ticketsDB.filter((ticket) => ticket.eliminado === false);
+      ticketsDB = filterTickets(filterCriteria, ticketsDB, user);
       ticketsDB = sortTickets(sortCriteria, ticketsDB);
       ticketsDB = ticketsDB.filter(
         (ticket) =>
@@ -84,6 +101,14 @@ const GerentePage: React.FC = () => {
     setOpen(false);
   };
 
+  const handleOpenTicket = () => {
+    setOpenTicket(true);
+  };
+
+  const handleCloseTicket = () => {
+    setOpenTicket(false);
+  };
+
   return (
     <Box
       sx={{
@@ -97,6 +122,7 @@ const GerentePage: React.FC = () => {
       }}
     >
       <RequerimientoDialog open={open} onClose={handleClose} />
+      <TicketDialog open={openTicket} onClose={handleCloseTicket} />
       <Box
         sx={{
           display: "flex",
@@ -119,6 +145,7 @@ const GerentePage: React.FC = () => {
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
+          <FilterMenu onFilterChange={handleFilterChange} />
           <SortMenu onSortChange={handleSortChange} />
           <TextField
             sx={{
@@ -437,12 +464,30 @@ const GerentePage: React.FC = () => {
         aria-label="add"
         sx={{
           position: "absolute",
-          bottom: 60,
+          bottom: 130,
           right: 48,
         }}
         onClick={handleOpen}
       >
         <Tooltip title="Nuevo Requerimiento">
+          <AddIcon
+            sx={{
+              fontSize: "40px",
+            }}
+          />
+        </Tooltip>
+      </Fab>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{
+          position: "absolute",
+          bottom: 60,
+          right: 48,
+        }}
+        onClick={handleOpenTicket}
+      >
+        <Tooltip title="Nuevo Ticket">
           <AddIcon
             sx={{
               fontSize: "40px",
