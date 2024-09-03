@@ -45,7 +45,7 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     };
 
     getAreasDB();
-  }, []);
+  });
 
   useEffect(() => {
     const getReqsDB = async () => {
@@ -66,6 +66,7 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
 
     if (user) {
       newTicket.usuario = user;
+      newTicket.asignado = null;
       newTicket.titulo = titulo;
       newTicket.descripcion = descripcion;
       newTicket.requerimiento = req;
@@ -84,10 +85,10 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
   // Verifica si el botón de crear ticket debe estar deshabilitado
   const isSubmitDisabled = (): boolean => {
     return (
-      !titulo || 
-      !descripcion || 
-      !area || 
-      !requerimiento || 
+      !titulo ||
+      !descripcion ||
+      !area ||
+      !requerimiento ||
       requerimientos.length === 0
     );
   };
@@ -100,16 +101,21 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
       fullWidth
       sx={{ borderRadius: 3 }}
     >
-      <Box sx={{ marginBottom: -2, display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: 1 }}>
+      <Box
+        sx={{
+          marginBottom: -2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingRight: 1,
+        }}
+      >
         <DialogTitle>
           <Box sx={{ paddingLeft: 1, marginTop: 2, fontSize: 26 }}>
             <b>Nuevo Ticket</b>
           </Box>
         </DialogTitle>
-        <IconButton
-          onClick={onClose}
-          sx={{ marginTop: 2, marginRight: 2 }}
-        >
+        <IconButton onClick={onClose} sx={{ marginTop: 2, marginRight: 2 }}>
           <CloseIcon sx={{ fontSize: 30 }} />
         </IconButton>
       </Box>
@@ -144,7 +150,9 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
               label="Área"
             >
               {areas.map((a) => (
-                <MenuItem key={a.nombre} value={a.nombre}>{a.nombre}</MenuItem>
+                <MenuItem key={a.nombre} value={a.nombre}>
+                  {a.nombre}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -158,7 +166,9 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
               disabled={requerimientos.length === 0}
             >
               {requerimientos.map((req) => (
-                <MenuItem key={req.descripcion} value={req.descripcion}>{req.descripcion}</MenuItem>
+                <MenuItem key={req.descripcion} value={req.descripcion}>
+                  {req.descripcion}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -176,10 +186,10 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
             </Select>
           </FormControl>
           <DialogActions sx={{ padding: 0, paddingTop: 2 }}>
-            <Button 
-              onClick={handleSubmit} 
-              color="primary" 
-              variant="contained" 
+            <Button
+              onClick={handleSubmit}
+              color="primary"
+              variant="contained"
               disabled={isSubmitDisabled()}
             >
               Crear Ticket

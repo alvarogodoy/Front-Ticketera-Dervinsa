@@ -54,7 +54,7 @@ const AreaDialog: React.FC<AreaFormProps> = ({ onClose, open }) => {
       >
         <DialogTitle>
           <Box sx={{ paddingLeft: 1, marginTop: 2, fontSize: 26 }}>
-            <b>Nuevo Area</b>
+            <b>Nueva Area</b>
           </Box>
         </DialogTitle>
         <IconButton onClick={onClose} sx={{ marginTop: 2, marginRight: 2 }}>

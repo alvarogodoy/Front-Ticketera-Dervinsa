@@ -82,7 +82,7 @@ const AdminPage: React.FC = () => {
             fontFamily: "Segoe UI Symbol",
           }}
         >
-          <b>Portal de Gestion</b>
+          <b>Portal de Gestión</b>
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <TextField
@@ -121,25 +121,39 @@ const AdminPage: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>ID</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>ID</b>
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Nombre</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>Nombre</b>
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>E-Mail</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>E-Mail</b>
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Rol</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>Rol</b>
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Area</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>Area</b>
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Habilitado</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>Habilitado</b>
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}><b>Editar</b></Typography>
+                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                    <b>Editar</b>
+                  </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
