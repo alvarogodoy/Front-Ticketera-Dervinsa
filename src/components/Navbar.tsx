@@ -9,14 +9,11 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import MenuIcon from '@mui/icons-material/Menu';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import MenuIcon from "@mui/icons-material/Menu";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
 import { useAuth0 } from "@auth0/auth0-react";
-
-const settings = ["Mis Tickets", "Cerrar Sesión"];
+import { Button } from "@mui/material";
 
 function Navbar() {
   const { isAuthenticated, user, logout } = useAuth0();
@@ -40,16 +37,23 @@ function Navbar() {
   };
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right', my: 2 }}>
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "right",
+          my: 2,
+        }}
+      >
         <Typography
           variant="subtitle1"
           sx={{
-            maxWidth: '250px',  // adjust the max width as necessary
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            marginLeft: 2
+            maxWidth: "250px", // adjust the max width as necessary
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            marginLeft: 2,
           }}
         >
           {user?.name}
@@ -57,20 +61,50 @@ function Navbar() {
         <Avatar
           variant="rounded"
           src={user?.picture}
-          sx={{ 
+          sx={{
             width: 35,
             height: 35,
             mr: 1,
-            marginLeft: 1
+            marginLeft: 1,
           }}
         />
       </Box>
       <List>
-        {settings.map((setting) => (
-          <ListItem button key={setting} onClick={setting === "Cerrar Sesión" ? handleLogout : handleCloseUserMenu}>
-            <ListItemText sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right'}} primary={setting} />
-          </ListItem>
-        ))}
+        <Button
+          fullWidth
+          href="/tickets"
+          sx={{
+            display: "flex",
+            justifyContent: "right",
+            textTransform: "none", // Mantiene el texto sin transformarlo a mayúsculas
+          }}
+        >
+          Mis Tickets
+        </Button>
+
+        <Button
+          fullWidth
+          href="/dashboard"
+          sx={{
+            display: "flex",
+            justifyContent: "right",
+            textTransform: "none",
+          }}
+        >
+          Gestión de Ticket
+        </Button>
+
+        <Button
+          fullWidth
+          onClick={handleLogout}
+          sx={{
+            display: "flex",
+            justifyContent: "right",
+            textTransform: "none",
+          }}
+        >
+          Cerrar Sesión
+        </Button>
       </List>
     </Box>
   );
@@ -80,7 +114,14 @@ function Navbar() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", width: '100%', mr: 1}}>
+            <Box
+              sx={{
+                display: { xs: "flex", md: "none" },
+                alignItems: "center",
+                width: "100%",
+                mr: 1,
+              }}
+            >
               <img
                 src="/img/logo2.png"
                 alt="logo"
@@ -90,7 +131,7 @@ function Navbar() {
                 variant="h6"
                 noWrap
                 component="div"
-                sx={{ 
+                sx={{
                   flexGrow: 1,
                   mr: 2,
                   fontFamily: "monospace",
@@ -98,7 +139,7 @@ function Navbar() {
                   letterSpacing: ".3rem",
                   color: "inherit",
                   textDecoration: "none",
-                  marginLeft: 3
+                  marginLeft: 3,
                 }}
               >
                 TICKETERA
@@ -109,13 +150,19 @@ function Navbar() {
                   aria-label="open drawer"
                   edge="end"
                   onClick={handleDrawerToggle}
-                  sx={{ display: { md: 'none' } }}
+                  sx={{ display: { md: "none" } }}
                 >
                   <MenuIcon />
                 </IconButton>
               ) : null}
             </Box>
-            <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", mr: 1 }}>
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                mr: 1,
+              }}
+            >
               <img
                 src="/img/logo2.png"
                 alt="logo"
@@ -134,30 +181,31 @@ function Navbar() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
-                marginLeft: 2
+                marginLeft: 2,
               }}
             >
               TICKETERA
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
+            <Box
+              sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+            ></Box>
 
             {isAuthenticated ? (
               <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-                
                 <Tooltip title="Abrir Opciones">
-                  <IconButton 
-                    onClick={handleOpenUserMenu} 
-                    sx={{ 
-                      p: 0, 
-                      '&:hover': {
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{
+                      p: 0,
+                      "&:hover": {
                         borderRadius: 2,
                       },
-                      '&:hover .MuiTypography-root': {
+                      "&:hover .MuiTypography-root": {
                         //color: 'rgba(255, 255, 255, 0.8)',
-                        textShadow: '0 0 5px rgba(255, 255, 255, 0.8)', // Añadido para iluminar el contorno del texto
+                        textShadow: "0 0 5px rgba(255, 255, 255, 0.8)", // Añadido para iluminar el contorno del texto
                       },
-                      '&:hover .MuiAvatar-root': {
-                        borderColor: 'rgba(255, 255, 255, 0.8)',
+                      "&:hover .MuiAvatar-root": {
+                        borderColor: "rgba(255, 255, 255, 0.8)",
                       },
                     }}
                   >
@@ -172,18 +220,18 @@ function Navbar() {
                         color: "white",
                         textDecoration: "none",
                         marginLeft: 2,
-                        border: '2px solid transparent',
-                        transition: 'border-color 0.1s ease-in-out',
+                        border: "2px solid transparent",
+                        transition: "border-color 0.1s ease-in-out",
                       }}
                     >
                       {user?.name}
                     </Typography>
                     <Avatar
-                      sx={{ 
-                        width: 45, 
+                      sx={{
+                        width: 45,
                         height: 45,
-                        border: '2px solid transparent',
-                        transition: 'border-color 0.1s ease-in-out',
+                        border: "2px solid transparent",
+                        transition: "border-color 0.1s ease-in-out",
                       }}
                       variant="rounded"
                       src={user?.picture}
@@ -206,14 +254,25 @@ function Navbar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem
-                      key={setting}
-                      onClick={setting === "Cerrar Sesión" ? handleLogout : handleCloseUserMenu}
-                    >
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem
+                    onClick={handleCloseUserMenu}
+                    component="a"
+                    href="/tickets"
+                  >
+                    <Typography textAlign="center">Mis Tickets</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleCloseUserMenu}
+                    component="a"
+                    href="/dashboard"
+                  >
+                    <Typography textAlign="center">
+                      Gestión de Ticket
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">Cerrar Sesión</Typography>
+                  </MenuItem>
                 </Menu>
               </Box>
             ) : null}
@@ -230,8 +289,8 @@ function Navbar() {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": { boxSizing: "border-box", width: 250 },
           }}
         >
           {drawer}

@@ -8,6 +8,7 @@ import {
   Button,
   Box,
   IconButton,
+  Typography,
 } from "@mui/material";
 import Requerimiento from "../types/Requerimiento";
 import { useAuth } from "../context/AuthContext";
@@ -59,8 +60,23 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
         }}
       >
         <DialogTitle>
-          <Box sx={{ paddingLeft: 1, marginTop: 2, fontSize: 26 }}>
-            <b>Nuevo Requerimiento</b>
+          <Box sx={{ paddingLeft: 1, marginTop: 2 }}>
+            <Typography
+              sx={{
+                maxWidth: {
+                  xs: "180px", // Máximo ancho en pantallas pequeñas (celulares)
+                  sm: "50vw",  // Máximo ancho en pantallas medianas
+                  md: "70vw",  // Máximo ancho en pantallas más grandes
+                  lg: "80vw",  // Máximo ancho en pantallas aún más grandes
+                },
+                fontSize: 22,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <b>Nuevo Requerimiento</b>
+            </Typography>
           </Box>
         </DialogTitle>
         <IconButton onClick={onClose} sx={{ marginTop: 2, marginRight: 2 }}>
