@@ -12,12 +12,15 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import Rol from "../types/enums/Rol";
 
 function Navbar() {
-  const { isAuthenticated, user, logout } = useAuth0();
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const { isAuthenticated, user, logout } = useAuth();
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -56,11 +59,11 @@ function Navbar() {
             marginLeft: 2,
           }}
         >
-          {user?.name}
+          {user?.nombre}
         </Typography>
         <Avatar
           variant="rounded"
-          src={user?.picture}
+          src={user?.urlPic}
           sx={{
             width: 35,
             height: 35,
@@ -82,17 +85,31 @@ function Navbar() {
           Mis Tickets
         </Button>
 
-        <Button
-          fullWidth
-          href="/dashboard"
-          sx={{
-            display: "flex",
-            justifyContent: "right",
-            textTransform: "none",
-          }}
-        >
-          Gestión de Ticket
-        </Button>
+        {user?.rol === Rol.ADMIN ? (
+          <Button
+            fullWidth
+            href="/dashboard"
+            sx={{
+              display: "flex",
+              justifyContent: "right",
+              textTransform: "none",
+            }}
+          >
+            Administracion de Usuarios
+          </Button>
+        ) : (
+          <Button
+            fullWidth
+            href="/dashboard"
+            sx={{
+              display: "flex",
+              justifyContent: "right",
+              textTransform: "none",
+            }}
+          >
+            Gestión de Tickets
+          </Button>
+        )}
 
         <Button
           fullWidth
@@ -224,7 +241,7 @@ function Navbar() {
                         transition: "border-color 0.1s ease-in-out",
                       }}
                     >
-                      {user?.name}
+                      {user?.nombre}
                     </Typography>
                     <Avatar
                       sx={{
@@ -234,7 +251,7 @@ function Navbar() {
                         transition: "border-color 0.1s ease-in-out",
                       }}
                       variant="rounded"
-                      src={user?.picture}
+                      src={user?.urlPic}
                     />
                   </IconButton>
                 </Tooltip>
@@ -261,15 +278,28 @@ function Navbar() {
                   >
                     <Typography textAlign="center">Mis Tickets</Typography>
                   </MenuItem>
-                  <MenuItem
-                    onClick={handleCloseUserMenu}
-                    component="a"
-                    href="/dashboard"
-                  >
-                    <Typography textAlign="center">
-                      Gestión de Ticket
-                    </Typography>
-                  </MenuItem>
+                  {user?.rol === Rol.ADMIN ? (
+                    <MenuItem
+                      onClick={handleCloseUserMenu}
+                      component="a"
+                      href="/dashboard"
+                    >
+                      <Typography textAlign="center">
+                        Administracion de Usuarios
+                      </Typography>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      onClick={handleCloseUserMenu}
+                      component="a"
+                      href="/dashboard"
+                    >
+                      <Typography textAlign="center">
+                        Gestión de Tickets
+                      </Typography>
+                    </MenuItem>
+                  )}
+
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Cerrar Sesión</Typography>
                   </MenuItem>
