@@ -64,7 +64,7 @@ const RequerimientoDialog: React.FC<RequerimientoFormProps> = ({
             <Typography
               sx={{
                 maxWidth: {
-                  xs: "180px", // Máximo ancho en pantallas pequeñas (celulares)
+                  xs: "240px", // Máximo ancho en pantallas pequeñas (celulares)
                   sm: "50vw",  // Máximo ancho en pantallas medianas
                   md: "70vw",  // Máximo ancho en pantallas más grandes
                   lg: "80vw",  // Máximo ancho en pantallas aún más grandes

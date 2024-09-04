@@ -123,41 +123,59 @@ const GerentePage: React.FC = () => {
     >
       <RequerimientoDialog open={open} onClose={handleClose} />
       <TicketDialog open={openTicket} onClose={handleCloseTicket} />
+
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", md: "row" }, // Cambia de columna a fila según el tamaño de pantalla
           justifyContent: "space-between",
-          alignItems: "center",
         }}
       >
-        <Typography
-          variant="h4"
+        <Box
           sx={{
-            maxWidth: "350px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            letterSpacing: ".1rem",
-            whiteSpace: "nowrap",
-            fontFamily: "Segoe UI Symbol",
+            display: "flex",
+            alignItems: { xs: "flex-end", md: "flex-end" },
+            justifyContent: "space-between",
+            width: "100%", // Ocupa el ancho completo para distribuir el espacio
           }}
         >
-          <b>{user?.area?.nombre}</b>
-        </Typography>
-
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <FilterMenu onFilterChange={handleFilterChange} />
-          <SortMenu onSortChange={handleSortChange} />
+          <Typography
+            variant="h4"
+            sx={{
+              maxWidth: "350px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              letterSpacing: ".1rem",
+              whiteSpace: "nowrap",
+              fontFamily: "Segoe UI Symbol",
+            }}
+          >
+            <b>{user?.area?.nombre}</b>
+          </Typography>
           <TextField
             sx={{
+              width: { xs: 250, md: 400 }, // Ancho completo solo en pantallas pequeñas
               zoom: "75%",
-              marginLeft: 2,
-              width: 180,
             }}
             label="Buscar por email"
             variant="outlined"
             value={searchTerm}
             onChange={handleSearchChange}
           />
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-end", // Alinea verticalmente en pantallas más grandes
+            justifyContent: "flex-end", // Alinea los elementos al final (lado derecho)
+            gap: 2, // Espacio entre FilterMenu y SortMenu
+            minWidth: "310px",
+            mt: { xs: 2, md: 0 }, // Margen superior solo en pantallas pequeñas
+          }}
+        >
+          <FilterMenu onFilterChange={handleFilterChange} />
+          <SortMenu onSortChange={handleSortChange} />
         </Box>
       </Box>
 
@@ -459,6 +477,7 @@ const GerentePage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
+
       <Fab
         color="success"
         aria-label="add"
@@ -466,17 +485,54 @@ const GerentePage: React.FC = () => {
           position: "absolute",
           bottom: 130,
           right: 48,
+          "&:hover .hover-effect": {
+            bgcolor: "#1B5E20", // Color más oscuro al pasar el mouse
+          },
         }}
         onClick={handleOpen}
       >
         <Tooltip title="Nuevo Requerimiento">
-          <AddIcon
+          <Box
             sx={{
-              fontSize: "40px",
+              display: "flex",
+              alignItems: "center", // Alinea verticalmente el texto y el ícono
             }}
-          />
+          >
+            <Box
+              className="hover-effect" // Clase para aplicar el hover
+              sx={{
+                position: "absolute",
+                display: { xs: "flex", md: "none" }, // Solo muestra el texto en pantallas xs
+                justifyContent: "center",
+                alignItems: "center",
+                bgcolor: "#2E7D32", // Color de fondo inicial
+                transition: "background-color 0.3s", // Transición suave
+                borderRadius: 10,
+                height: 40,
+                width: 210,
+                left: -220, // Ajusta esta distancia para alinear correctamente el texto
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: "Segoe UI Symbol",
+                  color: "white",
+                }}
+              >
+                <b>Nuevo Requerimiento</b>
+              </Typography>
+            </Box>
+            <AddIcon
+              sx={{
+                fontSize: "40px",
+                color: "white",
+              }}
+            />
+          </Box>
         </Tooltip>
       </Fab>
+
       <Fab
         color="primary"
         aria-label="add"
@@ -484,15 +540,49 @@ const GerentePage: React.FC = () => {
           position: "absolute",
           bottom: 60,
           right: 48,
+          "&:hover .hover-effect": {
+            bgcolor: "#1565C0", // Color más oscuro al pasar el mouse
+          },
         }}
         onClick={handleOpenTicket}
       >
         <Tooltip title="Nuevo Ticket">
-          <AddIcon
+          <Box
             sx={{
-              fontSize: "40px",
+              display: "flex",
             }}
-          />
+          >
+            <Box
+              className="hover-effect" // Clase para aplicar el hover
+              sx={{
+                position: "absolute",
+                display: { xs: "flex", md: "none" }, // Solo muestra el texto en pantallas xs
+                justifyContent: "center",
+                alignItems: "center",
+                bgcolor: "#1976D2",
+                transition: "background-color 0.3s", // Transición suave
+                borderRadius: 10,
+                height: 40,
+                width: 135,
+                left: -145, // Ajusta esta distancia para alinear correctamente el texto
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: "Segoe UI Symbol",
+                  color: "white",
+                }}
+              >
+                <b>Nuevo Ticket</b>
+              </Typography>
+            </Box>
+            <AddIcon
+              sx={{
+                fontSize: "40px",
+              }}
+            />
+          </Box>
         </Tooltip>
       </Fab>
     </Box>
