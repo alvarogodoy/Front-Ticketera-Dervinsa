@@ -25,11 +25,7 @@ const SortMenu: React.FC<SortMenuProps> = ({ onSortChange, sx }) => {
   };
 
   return (
-    <Box 
-      sx={
-        sx
-      }
-    >
+    <Box sx={sx}>
       <Button
         disableRipple
         disableTouchRipple
@@ -38,8 +34,7 @@ const SortMenu: React.FC<SortMenuProps> = ({ onSortChange, sx }) => {
         onClick={handleClick}
         sx={{ display: "flex", alignItems: "center" }} // Alineación central para el ícono y el texto
       >
-        <SortIcon sx={{ marginRight: 1 }} />{" "}
-        Ordenar por
+        <SortIcon sx={{ marginRight: 1 }} /> Ordenar por
       </Button>
       <Menu
         id="sort-menu"

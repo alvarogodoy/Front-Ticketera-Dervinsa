@@ -4,6 +4,7 @@ import Rol from "../types/enums/Rol";
 import GerentePage from "./GerentePage";
 import AdminPage from "./AdminPage";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import DefaultPage from "./DefaultPage";
 
 const DashboardPage: React.FC = () => {
   const { isLoading } = useAuth0();

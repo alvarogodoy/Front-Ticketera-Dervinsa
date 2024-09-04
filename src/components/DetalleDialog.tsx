@@ -25,6 +25,8 @@ import Rol from "../types/enums/Rol";
 import { useAuth } from "../context/AuthContext";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Usuario from "../types/Usuario";
+import { getUsuarioByEmail, getUsuarios } from "../services/UsuarioService";
 
 interface DetalleDialogProps {
   onClose: () => void;
@@ -39,7 +41,32 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
 }) => {
   const [prioridadColor, setPrioridadColor] = useState<string>("");
   const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
+  const [usuariosArea, setUsuariosArea] = useState<Usuario[]>([]);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchUsersArea = async () => {
+      let usersArea = await getUsuarios();
+      //usersArea = usersArea.filter((u) => u.area === ticket.requerimiento.area);
+
+      setUsuariosArea(usersArea);
+    };
+
+    fetchUsersArea();
+  });
+
+  const handleAsignadoChange = async (event: SelectChangeEvent) => {
+    let newAsignado = event.target.value as string;
+    let asignadoFromDb = await getUsuarioByEmail(newAsignado);
+
+    let updatedTicket = ticket;
+
+    if (ticket) {
+      ticket.asignado = asignadoFromDb;
+      updatedTicket = await updateTicket(ticket);
+    }
+    ticket = updatedTicket;
+  };
 
   const handleEstadoChange = async (event: SelectChangeEvent) => {
     let newEstado = event.target.value as Estado;
@@ -196,7 +223,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                 marginBottom: 1.5,
               }}
             >
-              Usuario:
+              Reportado por:
               <Avatar
                 sx={{
                   borderRadius: "4px",
@@ -207,7 +234,41 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                 }}
                 src={ticket.usuario.urlPic}
               />
-              {ticket.usuario.email}
+              {ticket.usuario.nombre}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontFamily: "Segoe UI Symbol",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 1.5,
+              }}
+            >
+              Asignado a:
+              <FormControl variant="standard" required sx={{ marginTop: 1 }}>
+                <Select
+                  value={ticket.asignado?.email}
+                  onChange={handleAsignadoChange}
+                  sx={{ width: 175, height: 40 }}
+                >
+                  {usuariosArea.map((u) => (
+                    <MenuItem value={u.email}>
+                      <Avatar
+                        sx={{
+                          borderRadius: "4px",
+                          ml: 1,
+                          width: 24,
+                          height: 24,
+                          mr: 1,
+                        }}
+                        src={u.urlPic}
+                      />
+                      {u.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Typography>
             <Typography
               variant="subtitle1"

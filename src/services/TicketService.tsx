@@ -46,6 +46,9 @@ export const updateTicket = async (ticket: Ticket) => {
     usuario: {
       id: ticket.usuario.id,
     },
+    asignado: {
+      id: ticket.asignado?.id,
+    },
   };
 
   console.log(ticketToSend);
