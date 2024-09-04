@@ -2,7 +2,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useAuth } from "../context/AuthContext";
 import Rol from "../types/enums/Rol";
 import GerentePage from "./GerentePage";
-import EmpleadoPage from "./EmpleadoPage";
 import AdminPage from "./AdminPage";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import DefaultPage from "./DefaultPage";
@@ -37,17 +36,14 @@ const DashboardPage: React.FC = () => {
     );
   }
 
+  if (user?.rol === Rol.ADMIN) {
+    return <AdminPage />;
+  }
+
+  // Si el usuario es EMPLEADO o GERENTE, mostrar ambas páginas
   return (
     <>
-      {user?.rol === Rol.EMPLEADO ? (
-        <EmpleadoPage />
-      ) : user?.rol === Rol.GERENTE ? (
-        <GerentePage />
-      ) : user?.rol === Rol.ADMIN ? (
-        <AdminPage />
-      ) : (
-        <DefaultPage />
-      )}
+      <GerentePage />
     </>
   );
 };
