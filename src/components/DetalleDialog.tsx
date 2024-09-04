@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  InputLabel,
 } from "@mui/material";
 import Ticket from "../types/Ticket";
 import CloseIcon from "@mui/icons-material/Close";
@@ -47,8 +48,10 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
   useEffect(() => {
     const fetchUsersArea = async () => {
       let usersArea = await getUsuarios();
-      //usersArea = usersArea.filter((u) => u.area === ticket.requerimiento.area);
+      usersArea = usersArea.filter((u) => u.area?.nombre === user?.area?.nombre);
 
+      //console.log(usersArea)
+      
       setUsuariosArea(usersArea);
     };
 
@@ -56,8 +59,14 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
   });
 
   const handleAsignadoChange = async (event: SelectChangeEvent) => {
+    
     let newAsignado = event.target.value as string;
-    let asignadoFromDb = await getUsuarioByEmail(newAsignado);
+    let asignadoFromDb = null;
+    console.log(newAsignado);
+
+    if(newAsignado != "Sin Asignar"){
+      asignadoFromDb = await getUsuarioByEmail(newAsignado)
+    }
 
     let updatedTicket = ticket;
 
@@ -147,7 +156,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             flexDirection: "column",
             maxHeight: "90vh",
             overflow: "auto",
-            zoom:  { xs: "80%", md: "100%" }
+            zoom: { xs: "80%", md: "100%" },
           }}
         >
           <Box
@@ -174,11 +183,18 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             </IconButton>
           </Box>
           {user?.rol === Rol.GERENTE ? (
-            <FormControl variant="standard" required sx={{ marginTop: 1 }}>
+            <FormControl
+              size="small"
+              variant="standard"
+              required
+              sx={{ size: "small", marginTop: 1 }}
+            >
+              <InputLabel id="select-label">Cambiar Estado</InputLabel>
               <Select
+                size="small"
                 value={ticket.estado}
                 onChange={handleEstadoChange}
-                sx={{ width: 160, height: 40 }}
+                sx={{ size: "small", width: 160, height: 40 }}
               >
                 <MenuItem value={Estado.POR_HACER}>
                   <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
@@ -243,7 +259,9 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                   }}
                   src={ticket.usuario.urlPic}
                 />
-                {ticket.usuario.nombre}
+                <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                  {ticket.usuario.nombre}
+                </Typography>
               </Box>
             </Typography>
             <Typography
@@ -258,10 +276,15 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               Asignado a:
               <FormControl variant="standard" required sx={{ marginLeft: 1 }}>
                 <Select
-                  value={ticket.asignado?.email}
+                  value={ticket.asignado ? ticket.asignado.email : "Sin Asignar"}
                   onChange={handleAsignadoChange}
                   sx={{ width: 230, height: 40 }}
                 >
+                  <MenuItem
+                    value={"Sin Asignar"}
+                  >
+                    Sin Asignar
+                  </MenuItem>
                   {usuariosArea.map((u) => (
                     <MenuItem value={u.email}>
                       <Box
@@ -280,7 +303,9 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                           }}
                           src={u.urlPic}
                         />
-                        {u.nombre}
+                        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                          {u.nombre}
+                        </Typography>
                       </Box>
                     </MenuItem>
                   ))}
