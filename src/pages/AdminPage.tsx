@@ -87,9 +87,8 @@ const AdminPage: React.FC = () => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <TextField
             sx={{
+              width: { xs: 250, md: 400 }, // Ancho completo solo en pantallas pequeñas
               zoom: "75%",
-              marginLeft: 2,
-              width: 180,
             }}
             label="Buscar por email"
             variant="outlined"
@@ -172,17 +171,52 @@ const AdminPage: React.FC = () => {
           position: "absolute",
           bottom: 60,
           right: 48,
+          "&:hover .hover-effect": {
+            bgcolor: "#7B1FA2", // Color más oscuro al pasar el mouse
+          },
         }}
         onClick={handleOpen}
       >
         <Tooltip title="Nueva Area">
-          <AddIcon
+          <Box
             sx={{
-              fontSize: "40px",
+              display: "flex",
             }}
-          />
+          >
+            <Box
+              className="hover-effect" // Clase para aplicar el hover
+              sx={{
+                position: "absolute",
+                display: { xs: "flex", md: "none" }, // Solo muestra el texto en pantallas xs
+                justifyContent: "center",
+                alignItems: "center",
+                bgcolor: "#9C27B0",
+                transition: "background-color 0.3s", // Transición suave
+                borderRadius: 10,
+                height: 40,
+                width: 120,
+                left: -130, // Ajusta esta distancia para alinear correctamente el texto
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: "Segoe UI Symbol",
+                  color: "white",
+                }}
+              >
+                <b>Nueva Area</b>
+              </Typography>
+            </Box>
+            <AddIcon
+              sx={{
+                fontSize: "40px",
+              }}
+            />
+          </Box>
         </Tooltip>
       </Fab>
+      
     </Box>
   );
 };

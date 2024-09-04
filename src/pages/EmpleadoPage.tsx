@@ -74,7 +74,13 @@ const EmpleadoPage: React.FC = () => {
         >
           <b>Mis Tickets</b>
         </Typography>
-        <SortMenu onSortChange={handleSortChange} />
+        <Box
+          sx={{
+            minWidth: "160px",
+          }}
+        >
+          <SortMenu onSortChange={handleSortChange} />
+        </Box>
       </Box>
       <Box
         sx={{
@@ -97,6 +103,7 @@ const EmpleadoPage: React.FC = () => {
           ))}
         </Grid>
       </Box>
+
       <Fab
         color="primary"
         aria-label="add"
@@ -104,15 +111,49 @@ const EmpleadoPage: React.FC = () => {
           position: "absolute",
           bottom: 60,
           right: 48,
+          "&:hover .hover-effect": {
+            bgcolor: "#1565C0", // Color más oscuro al pasar el mouse
+          },
         }}
         onClick={handleOpen}
       >
         <Tooltip title="Nuevo Ticket">
-          <AddIcon
+          <Box
             sx={{
-              fontSize: "40px",
+              display: "flex",
             }}
-          />
+          >
+            <Box
+              className="hover-effect" // Clase para aplicar el hover
+              sx={{
+                position: "absolute",
+                display: { xs: "flex", md: "none" }, // Solo muestra el texto en pantallas xs
+                justifyContent: "center",
+                alignItems: "center",
+                bgcolor: "#1976D2",
+                transition: "background-color 0.3s", // Transición suave
+                borderRadius: 10,
+                height: 40,
+                width: 135,
+                left: -145, // Ajusta esta distancia para alinear correctamente el texto
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: "Segoe UI Symbol",
+                  color: "white",
+                }}
+              >
+                <b>Nuevo Ticket</b>
+              </Typography>
+            </Box>
+            <AddIcon
+              sx={{
+                fontSize: "40px",
+              }}
+            />
+          </Box>
         </Tooltip>
       </Fab>
     </Box>

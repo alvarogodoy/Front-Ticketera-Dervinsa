@@ -137,7 +137,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "80%",
+            width: "90%",
             maxWidth: 500,
             bgcolor: "background.paper",
             borderRadius: 1,
@@ -145,8 +145,9 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             p: 2,
             display: "flex",
             flexDirection: "column",
-            maxHeight: "80vh",
+            maxHeight: "90vh",
             overflow: "auto",
+            zoom:  { xs: "80%", md: "100%" }
           }}
         >
           <Box
@@ -224,17 +225,26 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               }}
             >
               Reportado por:
-              <Avatar
+              <Box
                 sx={{
-                  borderRadius: "4px",
-                  ml: 1,
-                  width: 24,
-                  height: 24,
-                  mr: 1,
+                  marginLeft: 1,
+                  display: "flex",
+                  alignItems: "center",
                 }}
-                src={ticket.usuario.urlPic}
-              />
-              {ticket.usuario.nombre}
+              >
+                <Avatar
+                  sx={{
+                    marginLeft: 1,
+                    borderRadius: "4px",
+                    ml: 1,
+                    width: 24,
+                    height: 24,
+                    mr: 1,
+                  }}
+                  src={ticket.usuario.urlPic}
+                />
+                {ticket.usuario.nombre}
+              </Box>
             </Typography>
             <Typography
               variant="subtitle1"
@@ -246,25 +256,32 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               }}
             >
               Asignado a:
-              <FormControl variant="standard" required sx={{ marginTop: 1 }}>
+              <FormControl variant="standard" required sx={{ marginLeft: 1 }}>
                 <Select
                   value={ticket.asignado?.email}
                   onChange={handleAsignadoChange}
-                  sx={{ width: 175, height: 40 }}
+                  sx={{ width: 230, height: 40 }}
                 >
                   {usuariosArea.map((u) => (
                     <MenuItem value={u.email}>
-                      <Avatar
+                      <Box
                         sx={{
-                          borderRadius: "4px",
-                          ml: 1,
-                          width: 24,
-                          height: 24,
-                          mr: 1,
+                          display: "flex",
+                          alignItems: "center",
                         }}
-                        src={u.urlPic}
-                      />
-                      {u.nombre}
+                      >
+                        <Avatar
+                          sx={{
+                            borderRadius: "4px",
+                            ml: 1,
+                            width: 24,
+                            height: 24,
+                            mr: 1,
+                          }}
+                          src={u.urlPic}
+                        />
+                        {u.nombre}
+                      </Box>
                     </MenuItem>
                   ))}
                 </Select>
