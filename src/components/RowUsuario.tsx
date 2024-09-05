@@ -17,9 +17,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
 import Usuario from "../types/Usuario";
 import { useEffect, useState } from "react";
 import Rol from "../types/enums/Rol";
@@ -43,10 +43,11 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
   const [editar, setEditar] = useState(false);
   const [openConfirmSave, setOpenConfirmSave] = useState(false);
 
-  const [originalArea, setOriginalArea] = useState<string | undefined>(usuario.area?.nombre); // Guardar el valor original
+  const [originalArea, setOriginalArea] = useState<string | undefined>(
+    usuario.area?.nombre
+  ); // Guardar el valor original
   const [originalRol, setOriginalRol] = useState<Rol>(usuario.rol); // Guardar el valor original
   const [isSaveDisabled, setIsSaveDisabled] = useState<boolean>(false); // Nuevo estado para el botón de guardar
-
 
   useEffect(() => {
     const getAreasDB = async () => {
@@ -172,13 +173,19 @@ const RowUsuario: React.FC<RowUsuarioProps> = ({ usuario }) => {
       }}
     >
       <TableCell align="center" sx={{ minWidth: 50 }}>
-        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>{usuario.id}</Typography>
+        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+          {usuario.id}
+        </Typography>
       </TableCell>
       <TableCell align="center" sx={{ minWidth: 300 }}>
-        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>{usuario.nombre}</Typography>
+        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+          {usuario.nombre}
+        </Typography>
       </TableCell>
       <TableCell align="center" sx={{ minWidth: 300 }}>
-        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>{usuario.email}</Typography>
+        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+          {usuario.email}
+        </Typography>
       </TableCell>
       <TableCell align="center" sx={{ minWidth: 200 }}>
         {editar ? (
