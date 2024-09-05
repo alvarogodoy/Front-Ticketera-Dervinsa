@@ -36,8 +36,6 @@ export const postTicket = async (ticket: Ticket): Promise<void> => {
 };
 
 export const updateTicket = async (ticket: Ticket) => {
-  console.log(ticket);
-
   let ticketToSend = {
     ...ticket,
     requerimiento: {

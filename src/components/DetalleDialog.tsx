@@ -15,6 +15,7 @@ import {
   DialogTitle,
   Button,
   InputLabel,
+  Divider,
 } from "@mui/material";
 import Ticket from "../types/Ticket";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,6 +29,7 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Usuario from "../types/Usuario";
 import { getUsuarioByEmail, getUsuarios } from "../services/UsuarioService";
+import SistemaComentarios from "./SistemaComentarios";
 
 interface DetalleDialogProps {
   onClose: () => void;
@@ -48,10 +50,12 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
   useEffect(() => {
     const fetchUsersArea = async () => {
       let usersArea = await getUsuarios();
-      usersArea = usersArea.filter((u) => u.area?.nombre === user?.area?.nombre);
+      usersArea = usersArea.filter(
+        (u) => u.area?.nombre === user?.area?.nombre
+      );
 
       //console.log(usersArea)
-      
+
       setUsuariosArea(usersArea);
     };
 
@@ -59,13 +63,12 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
   });
 
   const handleAsignadoChange = async (event: SelectChangeEvent) => {
-    
     let newAsignado = event.target.value as string;
     let asignadoFromDb = null;
     console.log(newAsignado);
 
-    if(newAsignado != "Sin Asignar"){
-      asignadoFromDb = await getUsuarioByEmail(newAsignado)
+    if (newAsignado != "Sin Asignar") {
+      asignadoFromDb = await getUsuarioByEmail(newAsignado);
     }
 
     let updatedTicket = ticket;
@@ -83,6 +86,9 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
     let updatedTicket = ticket;
 
     if (ticket) {
+      if (newEstado === Estado.COMPLETADO || newEstado === Estado.RECHAZADO) {
+        ticket.fechaCierre = new Date().toISOString();
+      }
       ticket.estado = newEstado;
       updatedTicket = await updateTicket(ticket);
     }
@@ -276,15 +282,13 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               Asignado a:
               <FormControl variant="standard" required sx={{ marginLeft: 1 }}>
                 <Select
-                  value={ticket.asignado ? ticket.asignado.email : "Sin Asignar"}
+                  value={
+                    ticket.asignado ? ticket.asignado.email : "Sin Asignar"
+                  }
                   onChange={handleAsignadoChange}
                   sx={{ width: 230, height: 40 }}
                 >
-                  <MenuItem
-                    value={"Sin Asignar"}
-                  >
-                    Sin Asignar
-                  </MenuItem>
+                  <MenuItem value={"Sin Asignar"}>Sin Asignar</MenuItem>
                   {usuariosArea.map((u) => (
                     <MenuItem value={u.email}>
                       <Box
@@ -422,6 +426,8 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
               {ticket.descripcion}
             </Typography>
           </Box>
+          <Divider></Divider>
+          <SistemaComentarios ticket={ticket} />
         </Box>
       </Modal>
 
