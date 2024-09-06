@@ -8,6 +8,11 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Limpiar sessionStorage cuando la página se renderiza
+    sessionStorage.clear();
+  }, []);
+
+  useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard"); // Redirige a una ruta protegida si ya está autenticado
     }
