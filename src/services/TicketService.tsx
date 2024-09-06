@@ -36,6 +36,16 @@ export const postTicket = async (ticket: Ticket): Promise<void> => {
 };
 
 export const updateTicket = async (ticket: Ticket) => {
+  let comments = [];
+
+  for (let i = 0; i < ticket.comentarios.length; i++) {
+    let comment = {
+      id: ticket.comentarios[i].id,
+    };
+
+    comments.push(comment);
+  }
+
   let ticketToSend = {
     ...ticket,
     requerimiento: {
@@ -44,12 +54,15 @@ export const updateTicket = async (ticket: Ticket) => {
     usuario: {
       id: ticket.usuario.id,
     },
-    asignado: {
-      id: ticket.asignado?.id,
-    },
+    asignado: ticket.asignado
+      ? {
+          id: ticket.asignado?.id,
+        }
+      : null,
+    comentarios: comments,
   };
 
-  console.log(ticketToSend);
+  console.log(JSON.stringify(ticketToSend));
 
   const response = await axios.put(`${API_URL}/${ticket.id}`, ticketToSend, {
     headers: {

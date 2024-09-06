@@ -65,16 +65,20 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
   const handleAsignadoChange = async (event: SelectChangeEvent) => {
     let newAsignado = event.target.value as string;
     let asignadoFromDb = null;
-    console.log(newAsignado);
 
-    if (newAsignado != "Sin Asignar") {
+    if (newAsignado === "Sin Asignar") {
+      asignadoFromDb = null;
+    } else {
       asignadoFromDb = await getUsuarioByEmail(newAsignado);
     }
+
+    console.log(asignadoFromDb);
 
     let updatedTicket = ticket;
 
     if (ticket) {
       ticket.asignado = asignadoFromDb;
+      console.log(ticket);
       updatedTicket = await updateTicket(ticket);
     }
     ticket = updatedTicket;
@@ -400,9 +404,23 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                   justifyContent: "space-between", // Añadido para espaciar el contenido
                 }}
               >
-                Fecha: {formatDate(ticket.fechaCreacion)}
+                Fecha de reporte: {formatDate(ticket.fechaCreacion)}
               </Typography>
             )}
+            {ticket.estado === Estado.COMPLETADO ||
+            ticket.estado === Estado.RECHAZADO ? (
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: "Segoe UI Symbol",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between", // Añadido para espaciar el contenido
+                }}
+              >
+                Fecha de cierre: {formatDate(ticket.fechaCierre)}
+              </Typography>
+            ) : null}
           </Box>
           <Typography
             variant="subtitle1"
