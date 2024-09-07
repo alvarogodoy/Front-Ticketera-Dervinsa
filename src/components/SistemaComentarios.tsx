@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import { useState } from "react";
 import Comentario from "../types/Comentario";
 import Usuario from "../types/Usuario";
 import CommentForm from "./CommentForm";
@@ -53,13 +53,16 @@ const SistemaComentarios: React.FC<SistemaComentariosProps> = ({ ticket }) => {
   return (
     <Box>
       <CommentForm onSubmit={addComment} />
-      <Box mt={4}>
-        {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment} onReply={addReply} />
-        ))}
+      <Box mt={2}>
+        {comments
+          .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()) // Ordenar por fecha descendente
+          .map((comment) => (
+            <Comment key={comment.id} comment={comment} onReply={addReply} />
+          ))}
       </Box>
     </Box>
   );
 };
+
 
 export default SistemaComentarios;
