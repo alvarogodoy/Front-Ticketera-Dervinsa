@@ -14,7 +14,6 @@ export const getTickets = async () => {
 };
 
 export const postTicket = async (ticket: Ticket): Promise<void> => {
-  console.log(ticket);
 
   let ticketToSend = {
     ...ticket,
@@ -26,7 +25,6 @@ export const postTicket = async (ticket: Ticket): Promise<void> => {
     },
   };
 
-  console.log(ticketToSend);
 
   await axios.post(API_URL, ticketToSend, {
     headers: {
@@ -61,8 +59,6 @@ export const updateTicket = async (ticket: Ticket) => {
       : null,
     comentarios: comments,
   };
-
-  console.log(JSON.stringify(ticketToSend));
 
   const response = await axios.put(`${API_URL}/${ticket.id}`, ticketToSend, {
     headers: {

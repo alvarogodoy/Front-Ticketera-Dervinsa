@@ -14,6 +14,7 @@ const ColumnaTickets: React.FC<ColumnaTicketsProps> = ({ tickets }) => {
           padding: 1,
           display: "flex",
           flexDirection: "column",
+          gap:1
         }}
       >
         {tickets.map((ticket) => (

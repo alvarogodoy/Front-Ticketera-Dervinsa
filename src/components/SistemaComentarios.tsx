@@ -26,8 +26,6 @@ const SistemaComentarios: React.FC<SistemaComentariosProps> = ({ ticket }) => {
     newComment.contenido = contenido;
     newComment.usuario = user ? user : new Usuario(); // Usa el usuario autenticado
 
-    console.log(newComment);
-
     const savedComment = await saveCommentToDatabase(newComment);
     if (savedComment) {
       setComments([...comments, savedComment]);

@@ -208,7 +208,7 @@ function Navbar() {
             ></Box>
 
             {isAuthenticated ? (
-              <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+              <Box sx={{ flexGrow: 0, borderRadius: 2, display: { xs: "none", md: "flex" } }}>
                 <Tooltip title="Abrir Opciones">
                   <IconButton
                     onClick={handleOpenUserMenu}
@@ -236,7 +236,6 @@ function Navbar() {
                         letterSpacing: ".1rem",
                         color: "white",
                         textDecoration: "none",
-                        marginLeft: 2,
                         border: "2px solid transparent",
                         transition: "border-color 0.1s ease-in-out",
                       }}

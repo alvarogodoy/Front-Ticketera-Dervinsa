@@ -24,7 +24,6 @@ export const getUsuarioByEmail = async (email: string) => {
 };
 
 export const postUsuario = async (usuario: Usuario) => {
-  console.log(JSON.stringify(usuario));
   const response = await axios.post(API_URL, usuario, {
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +33,6 @@ export const postUsuario = async (usuario: Usuario) => {
 };
 
 export const updateUsuario = async (usuario: Usuario) => {
-  console.log(usuario);
   let area;
 
   if (usuario.area) {
@@ -52,8 +50,6 @@ export const updateUsuario = async (usuario: Usuario) => {
     area: area,
     rol: usuario.rol,
   };
-
-  console.log(usuarioToSend);
 
   const response = await axios.put(`${API_URL}/${usuario.id}`, usuarioToSend, {
     headers: {
