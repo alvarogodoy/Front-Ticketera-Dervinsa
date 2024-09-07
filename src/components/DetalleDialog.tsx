@@ -157,16 +157,20 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: 500,
+            maxWidth: 800,
             bgcolor: "background.paper",
             borderRadius: 1,
             boxShadow: 24,
             p: 2,
             display: "flex",
             flexDirection: "column",
-            maxHeight: "90vh",
-            overflow: "auto",
             zoom: { xs: "80%", md: "100%" },
+            overflowY: "scroll", // Habilitar scroll
+            maxHeight: "80vh", // Limitar alto del modal
+            scrollbarWidth: "none", // Firefox: Ocultar scrollbar
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome/Safari: Ocultar scrollbar
+            },
           }}
         >
           <Box
@@ -193,133 +197,6 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             </IconButton>
           </Box>
           {user?.rol === Rol.GERENTE ? (
-            <FormControl
-              size="small"
-              variant="standard"
-              required
-              sx={{ size: "small", marginTop: 1 }}
-            >
-              <InputLabel id="select-label">Cambiar Estado</InputLabel>
-              <Select
-                size="small"
-                value={ticket.estado}
-                onChange={handleEstadoChange}
-                sx={{ size: "small", width: 160, height: 40 }}
-              >
-                <MenuItem value={Estado.POR_HACER}>
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                    <b>POR HACER</b>
-                  </Typography>
-                </MenuItem>
-                <MenuItem value={Estado.EN_PROGRESO}>
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                    <b>EN PROGRESO</b>
-                  </Typography>
-                </MenuItem>
-                <MenuItem value={Estado.COMPLETADO}>
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                    <b>COMPLETADO</b>
-                  </Typography>
-                </MenuItem>
-                <MenuItem value={Estado.RECHAZADO}>
-                  <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                    <b>RECHAZADO</b>
-                  </Typography>
-                </MenuItem>
-              </Select>
-            </FormControl>
-          ) : null}
-
-          <Typography
-            variant="subtitle1"
-            sx={{
-              marginTop: 3,
-              letterSpacing: ".1rem",
-              fontFamily: "Segoe UI Symbol",
-            }}
-          >
-            <b>Detalles</b>
-          </Typography>
-          <Box p={2}>
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontFamily: "Segoe UI Symbol",
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 1.5,
-              }}
-            >
-              Reportado por:
-              <Box
-                sx={{
-                  marginLeft: 1,
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar
-                  sx={{
-                    marginLeft: 1,
-                    borderRadius: "4px",
-                    ml: 1,
-                    width: 24,
-                    height: 24,
-                    mr: 1,
-                  }}
-                  src={ticket.usuario.urlPic}
-                />
-                <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                  {ticket.usuario.nombre}
-                </Typography>
-              </Box>
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontFamily: "Segoe UI Symbol",
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 1.5,
-              }}
-            >
-              Asignado a:
-              <FormControl variant="standard" required sx={{ marginLeft: 1 }}>
-                <Select
-                  value={
-                    ticket.asignado ? ticket.asignado.email : "Sin Asignar"
-                  }
-                  onChange={handleAsignadoChange}
-                  sx={{ width: 230, height: 40 }}
-                >
-                  <MenuItem value={"Sin Asignar"}>Sin Asignar</MenuItem>
-                  {usuariosArea.map((u) => (
-                    <MenuItem value={u.email}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            borderRadius: "4px",
-                            ml: 1,
-                            width: 24,
-                            height: 24,
-                            mr: 1,
-                          }}
-                          src={u.urlPic}
-                        />
-                        <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
-                          {u.nombre}
-                        </Typography>
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Typography>
             <Typography
               variant="subtitle1"
               sx={{
@@ -329,121 +206,338 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                 marginBottom: 1,
               }}
             >
-              Prioridad:
-              <FiberManualRecordIcon
-                sx={{
-                  color: prioridadColor,
-                  stroke: "#000",
-                  strokeWidth: 1,
-                  fill: prioridadColor,
-                  filter: "brightness(1.2)",
-                  fontSize: 30,
-                  marginLeft: 1,
-                  mr: 1,
-                }}
-              />
-              {ticket.prioridad}
+              <FormControl
+                variant="standard"
+                required
+                sx={{ marginTop: 1 }}
+              >
+                <InputLabel id="select-label">Cambiar Estado</InputLabel>
+                <Select
+                  value={ticket.estado}
+                  onChange={handleEstadoChange}
+                  sx={{
+                    width: 160,
+                    height: 40,
+                  }}
+                >
+                  <MenuItem
+                    value={Estado.POR_HACER}
+                    sx={{
+                      zoom: { xs: "80%", md: "100%" },
+                    }}
+                  >
+                    <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                      <b>POR HACER</b>
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    value={Estado.EN_PROGRESO}
+                    sx={{
+                      zoom: { xs: "80%", md: "100%" },
+                    }}
+                  >
+                    <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                      <b>EN PROGRESO</b>
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    value={Estado.COMPLETADO}
+                    sx={{
+                      zoom: { xs: "80%", md: "100%" },
+                    }}
+                  >
+                    <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                      <b>COMPLETADO</b>
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    value={Estado.RECHAZADO}
+                    sx={{
+                      zoom: { xs: "80%", md: "100%" },
+                    }}
+                  >
+                    <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                      <b>RECHAZADO</b>
+                    </Typography>
+                  </MenuItem>
+                </Select>
+              </FormControl>
             </Typography>
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontFamily: "Segoe UI Symbol",
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 1.2,
-              }}
-            >
-              Requerimiento:
-              <Box
-                sx={{
-                  bgcolor: "#d3d3d3",
-                  color: "#000",
-                  borderRadius: "8px",
-                  padding: "4px 8px",
-                  ml: 1,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {ticket.requerimiento.descripcion}
-              </Box>
-            </Typography>
-            {ticket.estado === Estado.POR_HACER ? (
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontFamily: "Segoe UI Symbol",
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: -1.1,
-                  marginBottom: -1.1,
-                  justifyContent: "space-between", // Añadido para espaciar el contenido
-                }}
-              >
-                Fecha: {formatDate(ticket.fechaCreacion)}
-                <Tooltip title={"Eliminar Ticket"}>
-                  <IconButton onClick={handleOpenConfirmDialog}>
-                    <DeleteIcon
-                      sx={{
-                        strokeWidth: 1,
-                        fontSize: 30,
-                        color: "#f96464",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              </Typography>
-            ) : (
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontFamily: "Segoe UI Symbol",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between", // Añadido para espaciar el contenido
-                }}
-              >
-                Fecha de reporte: {formatDate(ticket.fechaCreacion)}
-              </Typography>
-            )}
-            {ticket.estado === Estado.COMPLETADO ||
-            ticket.estado === Estado.RECHAZADO ? (
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontFamily: "Segoe UI Symbol",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between", // Añadido para espaciar el contenido
-                }}
-              >
-                Fecha de cierre: {formatDate(ticket.fechaCierre)}
-              </Typography>
-            ) : null}
-          </Box>
-          <Typography
-            variant="subtitle1"
+          ) : null}
+
+          <Box
             sx={{
-              letterSpacing: ".1rem",
-              fontFamily: "Segoe UI Symbol",
+              maxWidth: 800,
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row", md: "row" },
+              marginTop: 2,
             }}
           >
-            <b>Descripción</b>
-          </Typography>
-          <Box p={2} sx={{ overflow: "auto" }}>
-            <Typography
-              variant="subtitle1"
+            <Box
               sx={{
-                fontFamily: "Segoe UI Symbol",
-                display: "flex",
-                alignItems: "center",
-                whiteSpace: "pre-wrap",
+                minWidth: 200,
               }}
             >
-              {ticket.descripcion}
-            </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  letterSpacing: ".1rem",
+                  fontFamily: "Segoe UI Symbol",
+                }}
+              >
+                <b>Descripción</b>
+              </Typography>
+              <Box p={2} sx={{ overflow: "auto" }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontFamily: "Segoe UI Symbol",
+                    display: "flex",
+                    alignItems: "center",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {ticket.descripcion}
+                </Typography>
+              </Box>
+            </Box>
+            <Divider
+              orientation="vertical"
+              variant="middle"
+              flexItem
+              sx={{
+                marginLeft: "10px",
+                marginRight: "10px",
+              }}
+            />
+            <Box
+              sx={{
+                minWidth: { sm: 400 },
+                width: "100%",
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  letterSpacing: ".1rem",
+                  fontFamily: "Segoe UI Symbol",
+                }}
+              >
+                <b>Detalles</b>
+              </Typography>
+              <Box p={2}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontFamily: "Segoe UI Symbol",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 1,
+                  }}
+                >
+                  Reportado por:
+                  <Box
+                    sx={{
+                      marginLeft: 1,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        marginLeft: 1,
+                        borderRadius: "4px",
+                        ml: 1,
+                        width: 24,
+                        height: 24,
+                        mr: 1,
+                      }}
+                      src={ticket.usuario.urlPic}
+                    />
+                    <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                      {ticket.usuario.nombre}
+                    </Typography>
+                  </Box>
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontFamily: "Segoe UI Symbol",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 1,
+                  }}
+                >
+                  Asignado a:
+                  <FormControl
+                    variant="standard"
+                    required
+                    sx={{ marginLeft: 1 }}
+                  >
+                    <Select
+                      value={
+                        ticket.asignado ? ticket.asignado.email : "Sin Asignar"
+                      }
+                      onChange={handleAsignadoChange}
+                      sx={{ width: 230, height: 40 }}
+                    >
+                      <MenuItem
+                        value={"Sin Asignar"}
+                        sx={{
+                          zoom: { xs: "80%", md: "100%" },
+                        }}
+                      >
+                        <Typography
+                          sx={{ ml: 1, fontFamily: "Segoe UI Symbol" }}
+                        >
+                          Sin Asignar
+                        </Typography>
+                      </MenuItem>
+                      {usuariosArea.map((u) => (
+                        <MenuItem
+                          value={u.email}
+                          sx={{
+                            zoom: { xs: "80%", md: "100%" },
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar
+                              sx={{
+                                borderRadius: "4px",
+                                ml: 1,
+                                width: 24,
+                                height: 24,
+                                mr: 1,
+                              }}
+                              src={u.urlPic}
+                            />
+                            <Typography sx={{ fontFamily: "Segoe UI Symbol" }}>
+                              {u.nombre}
+                            </Typography>
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontFamily: "Segoe UI Symbol",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 1,
+                  }}
+                >
+                  Prioridad:
+                  <FiberManualRecordIcon
+                    sx={{
+                      color: prioridadColor,
+                      stroke: "#000",
+                      strokeWidth: 1,
+                      fill: prioridadColor,
+                      filter: "brightness(1.2)",
+                      fontSize: 30,
+                      marginLeft: 1,
+                      mr: 1,
+                    }}
+                  />
+                  {ticket.prioridad}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontFamily: "Segoe UI Symbol",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 1.2,
+                  }}
+                >
+                  Requerimiento:
+                  <Box
+                    sx={{
+                      bgcolor: "#d3d3d3",
+                      color: "#000",
+                      borderRadius: "8px",
+                      padding: "4px 8px",
+                      ml: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {ticket.requerimiento.descripcion}
+                  </Box>
+                </Typography>
+                {ticket.estado === Estado.POR_HACER ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between", // Para espaciar el contenido
+                      marginTop: -1.1,
+                      marginBottom: -1.1,
+                      width: "100%",
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        justifyContent: "flex-start",
+                        fontFamily: "Segoe UI Symbol",
+                      }}
+                    >
+                      Reporte: {formatDate(ticket.fechaCreacion)}
+                    </Typography>
+                    <Tooltip title={"Eliminar Ticket"}>
+                      <IconButton
+                        onClick={handleOpenConfirmDialog}
+                        sx={{
+                          marginLeft: "auto", // Empuja el botón hacia la derecha
+                          paddingRight: 0, // Elimina padding innecesario a la derecha
+                        }}
+                      >
+                        <DeleteIcon
+                          sx={{
+                            strokeWidth: 1,
+                            fontSize: 30,
+                            color: "#f96464",
+                          }}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                ) : (
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontFamily: "Segoe UI Symbol",
+                      marginBottom: 1.7,
+                    }}
+                  >
+                    Reporte: {formatDate(ticket.fechaCreacion)}
+                  </Typography>
+                )}
+                {ticket.estado === Estado.COMPLETADO ||
+                ticket.estado === Estado.RECHAZADO ? (
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontFamily: "Segoe UI Symbol",
+                    }}
+                  >
+                    Cierre: {formatDate(ticket.fechaCierre)}
+                  </Typography>
+                ) : null}
+              </Box>
+            </Box>
           </Box>
+
           <Divider></Divider>
           <SistemaComentarios ticket={ticket} />
         </Box>
