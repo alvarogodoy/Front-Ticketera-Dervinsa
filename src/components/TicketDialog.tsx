@@ -23,8 +23,6 @@ import { useAuth } from "../context/AuthContext";
 import { postTicket } from "../services/TicketService";
 import Prioridad from "../types/enums/Prioridad";
 import CloseIcon from "@mui/icons-material/Close";
-import Usuario from "../types/Usuario";
-import { getUsuarios } from "../services/UsuarioService";
 
 interface TicketFormProps {
   onClose: () => void;
@@ -36,11 +34,9 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
   const [descripcion, setDescripcion] = useState<string>("");
   const [areas, setAreas] = useState<Area[]>([]);
   const [area, setArea] = useState<string>("");
-  const [asignado, setAsignado] = useState<string>("");
   const [requerimientos, setRequerimientos] = useState<Requerimiento[]>([]);
   const [requerimiento, setRequerimiento] = useState<string>("");
   const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.BAJA);
-  const [usuariosArea, setUsuariosArea] = useState<Usuario[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -62,20 +58,6 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     getReqsDB();
   });
 
-  // Esta funcion esta por si le agregamos el FormControl de "Asignar a"
-  useEffect(() => {
-    const fetchUsersArea = async () => {
-      let usersArea = await getUsuarios();
-      usersArea = usersArea.filter(
-        (u) => u.area?.nombre === user?.area?.nombre
-      );
-
-      setUsuariosArea(usersArea);
-    };
-
-    fetchUsersArea();
-  });
-
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
@@ -85,7 +67,7 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
 
     if (user) {
       newTicket.usuario = user;
-      newTicket.asignado = usuariosArea.find(u => u.nombre === asignado) || null; // Asegura que el usuario sea encontrado
+      newTicket.asignado = null; // Asegura que el usuario sea encontrado
       newTicket.titulo = titulo;
       newTicket.descripcion = descripcion;
       newTicket.requerimiento = req;
@@ -99,7 +81,6 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     setDescripcion("");
     setRequerimiento("");
     setPrioridad(Prioridad.BAJA);
-    //setAsignado("");
     onClose();
   };
 
@@ -255,23 +236,6 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
               </Select>
             </FormControl>
           </Box>
-          {/*
-          <FormControl variant="outlined" required>
-            <InputLabel id="asignado-label">Asignar a</InputLabel>
-            <Select
-              labelId="asignado-label"
-              value={asignado}
-              onChange={(e) => setAsignado(e.target.value as string)}
-              label="Asignar a"
-            >
-              {usuariosArea.map((u) => (
-                <MenuItem key={u.nombre} value={u.nombre}>
-                  {u.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          */}
           <DialogActions sx={{ padding: 0, paddingTop: 2 }}>
             <Button
               onClick={handleSubmit}

@@ -54,8 +54,6 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
         (u) => u.area?.nombre === user?.area?.nombre
       );
 
-      //console.log(usersArea)
-
       setUsuariosArea(usersArea);
     };
 
@@ -72,13 +70,11 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
       asignadoFromDb = await getUsuarioByEmail(newAsignado);
     }
 
-    console.log(asignadoFromDb);
-
     let updatedTicket = ticket;
 
     if (ticket) {
       ticket.asignado = asignadoFromDb;
-      console.log(ticket);
+
       updatedTicket = await updateTicket(ticket);
     }
     ticket = updatedTicket;
@@ -206,11 +202,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                 marginBottom: 1,
               }}
             >
-              <FormControl
-                variant="standard"
-                required
-                sx={{ marginTop: 1 }}
-              >
+              <FormControl variant="standard" required sx={{ marginTop: 1 }}>
                 <InputLabel id="select-label">Cambiar Estado</InputLabel>
                 <Select
                   value={ticket.estado}
@@ -275,7 +267,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
           >
             <Box
               sx={{
-                flex: 1
+                flex: 1,
               }}
             >
               <Typography
@@ -455,7 +447,6 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                     fontFamily: "Segoe UI Symbol",
                     display: "flex",
                     alignItems: "center",
-                    marginBottom: 1.2,
                   }}
                 >
                   Requerimiento:
@@ -474,34 +465,57 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                     {ticket.requerimiento.descripcion}
                   </Box>
                 </Typography>
-                {ticket.estado === Estado.POR_HACER ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: 1.3,
+                    marginBottom: -1.1,
+                    width: "100%",
+                  }}
+                >
                   <Box
                     sx={{
                       display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between", // Para espaciar el contenido
-                      marginTop: -1.1,
-                      marginBottom: -1.1,
-                      width: "100%",
+                      flexDirection: "column", // Alinea los textos en columna
+                      justifyContent: "space-between",
                     }}
                   >
                     <Typography
                       variant="subtitle1"
                       sx={{
-                        justifyContent: "flex-start",
                         fontFamily: "Segoe UI Symbol",
+                        display: "flex",
+                        alignItems: "center",
                       }}
                     >
                       Reporte: {formatDate(ticket.fechaCreacion)}
                     </Typography>
-                    <Tooltip title={"Eliminar Ticket"}>
-                      <IconButton
-                        onClick={handleOpenConfirmDialog}
+
+                    {ticket.estado === Estado.COMPLETADO ||
+                    ticket.estado === Estado.RECHAZADO ? (
+                      <Typography
+                        variant="subtitle1"
                         sx={{
-                          marginLeft: "auto", // Empuja el botón hacia la derecha
-                          paddingRight: 0, // Elimina padding innecesario a la derecha
+                          fontFamily: "Segoe UI Symbol",
+                          marginTop: 1.6,
+                          marginBottom: 2,
                         }}
                       >
+                        Cierre: {formatDate(ticket.fechaCierre)}
+                      </Typography>
+                    ) : null}
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column", // Alinea los textos en columna
+                      justifyContent: "flex-end",
+                      alignItems: "end",
+                    }}
+                  >
+                    <Tooltip title={"Eliminar Ticket"}>
+                      <IconButton onClick={handleOpenConfirmDialog}>
                         <DeleteIcon
                           sx={{
                             strokeWidth: 1,
@@ -512,28 +526,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
                       </IconButton>
                     </Tooltip>
                   </Box>
-                ) : (
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      fontFamily: "Segoe UI Symbol",
-                      marginBottom: 1.7,
-                    }}
-                  >
-                    Reporte: {formatDate(ticket.fechaCreacion)}
-                  </Typography>
-                )}
-                {ticket.estado === Estado.COMPLETADO ||
-                ticket.estado === Estado.RECHAZADO ? (
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      fontFamily: "Segoe UI Symbol",
-                    }}
-                  >
-                    Cierre: {formatDate(ticket.fechaCierre)}
-                  </Typography>
-                ) : null}
+                </Box>
               </Box>
             </Box>
           </Box>
