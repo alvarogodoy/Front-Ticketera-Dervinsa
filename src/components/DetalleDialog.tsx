@@ -275,7 +275,7 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
           >
             <Box
               sx={{
-                minWidth: 200,
+                flex: 1
               }}
             >
               <Typography
@@ -312,8 +312,8 @@ const DetalleDialog: React.FC<DetalleDialogProps> = ({
             />
             <Box
               sx={{
-                minWidth: { sm: 400 },
-                width: "100%",
+                minWidth: 400,
+                flex: 1,
               }}
             >
               <Typography

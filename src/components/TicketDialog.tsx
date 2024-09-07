@@ -23,6 +23,8 @@ import { useAuth } from "../context/AuthContext";
 import { postTicket } from "../services/TicketService";
 import Prioridad from "../types/enums/Prioridad";
 import CloseIcon from "@mui/icons-material/Close";
+import Usuario from "../types/Usuario";
+import { getUsuarios } from "../services/UsuarioService";
 
 interface TicketFormProps {
   onClose: () => void;
@@ -34,9 +36,11 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
   const [descripcion, setDescripcion] = useState<string>("");
   const [areas, setAreas] = useState<Area[]>([]);
   const [area, setArea] = useState<string>("");
+  const [asignado, setAsignado] = useState<string>("");
   const [requerimientos, setRequerimientos] = useState<Requerimiento[]>([]);
   const [requerimiento, setRequerimiento] = useState<string>("");
   const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.BAJA);
+  const [usuariosArea, setUsuariosArea] = useState<Usuario[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -58,6 +62,20 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     getReqsDB();
   });
 
+  // Esta funcion esta por si le agregamos el FormControl de "Asignar a"
+  useEffect(() => {
+    const fetchUsersArea = async () => {
+      let usersArea = await getUsuarios();
+      usersArea = usersArea.filter(
+        (u) => u.area?.nombre === user?.area?.nombre
+      );
+
+      setUsuariosArea(usersArea);
+    };
+
+    fetchUsersArea();
+  });
+
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
@@ -67,11 +85,12 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
 
     if (user) {
       newTicket.usuario = user;
-      newTicket.asignado = null;
+      newTicket.asignado = usuariosArea.find(u => u.nombre === asignado) || null; // Asegura que el usuario sea encontrado
       newTicket.titulo = titulo;
       newTicket.descripcion = descripcion;
       newTicket.requerimiento = req;
       newTicket.prioridad = prioridad;
+      
     }
 
     postTicket(newTicket);
@@ -80,6 +99,7 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
     setDescripcion("");
     setRequerimiento("");
     setPrioridad(Prioridad.BAJA);
+    //setAsignado("");
     onClose();
   };
 
@@ -117,9 +137,9 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
               sx={{
                 maxWidth: {
                   xs: "180px", // Máximo ancho en pantallas pequeñas (celulares)
-                  sm: "50vw",  // Máximo ancho en pantallas medianas
-                  md: "70vw",  // Máximo ancho en pantallas más grandes
-                  lg: "80vw",  // Máximo ancho en pantallas aún más grandes
+                  sm: "50vw", // Máximo ancho en pantallas medianas
+                  md: "70vw", // Máximo ancho en pantallas más grandes
+                  lg: "80vw", // Máximo ancho en pantallas aún más grandes
                 },
                 fontSize: 22,
                 overflow: "hidden",
@@ -139,7 +159,7 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
         <Box
           component="form"
           onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2, padding: 1 }}
+          sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 1 }}
         >
           <TextField
             label="Título"
@@ -152,11 +172,22 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
             label="Descripción"
             variant="outlined"
             multiline
-            rows={4}
+            rows={5}
             value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
+            onChange={(e) => setDescripcion(e.target.value.slice(0, 255))}
+            inputProps={{ maxLength: 255 }}
+            helperText={`${descripcion.length}/255`}
+            FormHelperTextProps={{
+              sx: {
+                textAlign: "right",
+                paddingRight: 2,
+                width: "100%",
+              },
+            }}
             required
+            sx={{ marginBottom: -2.9 }}
           />
+
           <FormControl variant="outlined" required>
             <InputLabel id="area-label">Área</InputLabel>
             <Select
@@ -172,35 +203,75 @@ const TicketDialog: React.FC<TicketFormProps> = ({ onClose, open }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl variant="outlined" required>
-            <InputLabel id="requirement-label">Requerimiento</InputLabel>
-            <Select
-              labelId="requirement-label"
-              value={requerimiento}
-              onChange={(e) => setRequerimiento(e.target.value as string)}
-              label="Requerimiento"
-              disabled={requerimientos.length === 0}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              gap: 2, // Añade un espacio entre los FormControl
+            }}
+          >
+            <FormControl
+              variant="outlined"
+              required
+              sx={{
+                flex: 2, // Asegura que el FormControl ocupe todo el espacio disponible
+              }}
             >
-              {requerimientos.map((req) => (
-                <MenuItem key={req.descripcion} value={req.descripcion}>
-                  {req.descripcion}
+              <InputLabel id="requirement-label">Requerimiento</InputLabel>
+              <Select
+                labelId="requirement-label"
+                value={requerimiento}
+                onChange={(e) => setRequerimiento(e.target.value as string)}
+                label="Requerimiento"
+                disabled={requerimientos.length === 0}
+              >
+                {requerimientos.map((req) => (
+                  <MenuItem key={req.descripcion} value={req.descripcion}>
+                    {req.descripcion}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl
+              variant="outlined"
+              required
+              sx={{
+                flex: 1, // Asegura que el FormControl ocupe todo el espacio disponible
+              }}
+            >
+              <InputLabel id="prioridad-label">Prioridad</InputLabel>
+              <Select
+                labelId="prioridad-label"
+                value={prioridad}
+                onChange={(e) => setPrioridad(e.target.value as Prioridad)}
+                label="Prioridad"
+              >
+                <MenuItem value={Prioridad.BAJA}>Baja</MenuItem>
+                <MenuItem value={Prioridad.MEDIA}>Media</MenuItem>
+                <MenuItem value={Prioridad.ALTA}>Alta</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          {/*
+          <FormControl variant="outlined" required>
+            <InputLabel id="asignado-label">Asignar a</InputLabel>
+            <Select
+              labelId="asignado-label"
+              value={asignado}
+              onChange={(e) => setAsignado(e.target.value as string)}
+              label="Asignar a"
+            >
+              {usuariosArea.map((u) => (
+                <MenuItem key={u.nombre} value={u.nombre}>
+                  {u.nombre}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-          <FormControl variant="outlined" required>
-            <InputLabel id="prioridad-label">Prioridad</InputLabel>
-            <Select
-              labelId="prioridad-label"
-              value={prioridad}
-              onChange={(e) => setPrioridad(e.target.value as Prioridad)}
-              label="Prioridad"
-            >
-              <MenuItem value={Prioridad.BAJA}>Baja</MenuItem>
-              <MenuItem value={Prioridad.MEDIA}>Media</MenuItem>
-              <MenuItem value={Prioridad.ALTA}>Alta</MenuItem>
-            </Select>
-          </FormControl>
+          */}
           <DialogActions sx={{ padding: 0, paddingTop: 2 }}>
             <Button
               onClick={handleSubmit}
