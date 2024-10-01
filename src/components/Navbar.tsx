@@ -38,7 +38,7 @@ function Navbar() {
   );
 
   const userAvatar = (
-    <Box sx={{ flexGrow: 0, borderRadius: 2, display: { xs: "none", md: "flex" } }}>
+    <Box sx={{ flexGrow: 0, borderRadius: 2, display: { xs: "none", md: "flex" }, justifyContent: "flex-end", }}>
       <Tooltip title="Abrir Opciones">
         <IconButton onClick={handleOpenUserMenu} sx={iconButtonStyle}>
           <Typography variant="h6" sx={avatarTextStyle}>{user?.nombre}</Typography>
